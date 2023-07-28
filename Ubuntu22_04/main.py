@@ -98,17 +98,17 @@ if args.userfile:
     if os.path.isfile(args.userfile):
         USERFILE = args.userfile
     else:
-        USERFILE = os.path.join(CURR_DIR, "/resources/users.txt")
+        USERFILE = os.path.join(str(CURR_DIR), "/resources/users.txt")
 else:
-    USERFILE = os.path.join(CURR_DIR, "/resources/users.txt")
+    USERFILE = os.path.join(str(CURR_DIR), "/resources/users.txt")
 
 if args.adminfile:
     if os.path.isfile(args.adminfile):
         ADMINFILE = args.adminfile
     else:
-        ADMINFILE = os.path.join(CURR_DIR, "/resources/admins.txt")
+        ADMINFILE = os.path.join(str(CURR_DIR), "/resources/admins.txt")
 else:
-    ADMINFILE = os.path.join(CURR_DIR, "/resources/admins.txt")
+    ADMINFILE = os.path.join(str(CURR_DIR), "/resources/admins.txt")
 
 try:
     USERS = psutil.users()
