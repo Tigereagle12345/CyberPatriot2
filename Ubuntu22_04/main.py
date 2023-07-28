@@ -1450,7 +1450,7 @@ def restrictCoredumps(log):
     with open("/etc/security/limits.conf", "a") as file:
         file.write("\n* hard core 0")
     
-    with open("/etc/security/limits.conf", "w") as file:
+    with open("/etc/security/limits.conf", "rw") as file:
         fileText = file.read()
 
         if "fs.suid_dumpable = " in fileText:
@@ -1658,8 +1658,8 @@ def ufw(log):
 def authUsers(log, USERNAMES, USERFILE, OSTYPE):
     goodUsers = [line for line in open(USERFILE, "r").read()]
     goodUsers.append("root")
-    for user in goodUsers:
-        if user not in USERNAMES:
+    for user in USERNAMES:
+        if not user in goodUsers:
             if answer(f"Unauthorized user '{user}' detected: Remove?", log):
                 try:
                     LINUX = OSTYPE[1]
