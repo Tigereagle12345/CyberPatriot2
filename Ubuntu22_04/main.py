@@ -13,7 +13,7 @@ import re
 class Log():
     def __init__(self):
         self.HEADER = '\033[95m'
-        self.NORMALWHITE = '"\033[1;37;40m'
+        self.NORMALWHITE = '\033[0m'
         self.OKBLUE = '\033[94m'
         self.OKCYAN = '\033[96m'
         self.OKGREEN = '\033[92m'
