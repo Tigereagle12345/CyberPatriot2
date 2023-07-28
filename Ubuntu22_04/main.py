@@ -27,27 +27,27 @@ class Log():
     def done(self, text):
         if self.level < 1:
             print(f"{self.OKGREEN}{self.BOLD}{text}", end="")
-            #print(f"{self.NORMALWHITE}")
+            print(f"{self.NORMALWHITE}")
 
     def text(self, text):
         if self.level < 2:
             print(f"{self.OKCYAN}{self.BOLD}{text}", end="")
-            #print(f"{self.NORMALWHITE}")
+            print(f"{self.NORMALWHITE}")
 
     def head(self, text):
         if self.level < 3:
             print(f"{self.HEADER}{self.BOLD}{self.UNDERLINE}{text}", end="")
-            #print(f"{self.NORMALWHITE}")
+            print(f"{self.NORMALWHITE}")
     
     def warn(self, text):
         if self.level < 4:
             print(f"{self.WARNING}{self.BOLD}{text}", end="")
-            #print(f"{self.NORMALWHITE}")
+            print(f"{self.NORMALWHITE}")
         
     def error(self, text):
         if self.level < 5:
             print(f"{self.FAIL}{self.BOLD}{text}", end="")
-            #print(f"{self.NORMALWHITE}")
+            print(f"{self.NORMALWHITE}")
 
     def clear(self):
         print(f"{self.NORMALWHITE}", end="")
@@ -132,6 +132,7 @@ def answer(text, log):
     NO = ["N", "n", "NO", "No", "no"]
     
     proceed = input(log.warn(f"{text} Y/N: "))
+    log.clear()
     if proceed in YES:
         retbool = True
     elif proceed in NO:
