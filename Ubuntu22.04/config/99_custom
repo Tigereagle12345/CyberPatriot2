@@ -1,6 +1,0 @@
-#!/bin/sh
-# Grub file for a bootloader password
-cat <<EOF
-set superusers="<username>"
-password_pbkdf2 <username> <encrypted-password>
-EOF
