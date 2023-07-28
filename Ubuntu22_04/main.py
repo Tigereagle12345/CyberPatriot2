@@ -1660,7 +1660,7 @@ def ufw(log):
 
 # Find Unauthorizerd Users
 def authUsers(log, USERS, USERFILE, OSTYPE):
-    goodUsers = [line for line in open(USERFILE, "r").read()]
+    goodUsers = [open(USERFILE, "r").readlines()]
     log.error(goodUsers)
     goodUsers.append("root")
     users = []
@@ -1683,7 +1683,7 @@ def authUsers(log, USERS, USERFILE, OSTYPE):
 
 # Find Unauthorized Administrators
 def authAdmins(log, ADMINFILE, OSTYPE):
-    goodAdmins = [open(ADMINFILE, "r").readlines()]
+    goodAdmins = [line for line in open(ADMINFILE, "r")]
     goodAdmins.append("syslog")
 
     GROUPS = {}
