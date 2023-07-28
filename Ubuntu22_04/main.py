@@ -1420,20 +1420,21 @@ def appArmour(log):
     # Configure AppArmour
     log.text("Configuring AppArmour...")
     with open("/etc/default/grub", "w") as file:
-        fileTextList = file.read().split("\n")
-        if "GRUB_CMDLINE_LINUX" in fileTextList:
+        with open("/etc/default/grub", "r") as source:
+            fileTextList = source.read().split("\n")
+            if "GRUB_CMDLINE_LINUX" in fileTextList:
+                for line in fileTextList:
+                    if "GRUB_CMDLINE_LINUX" in line:
+                        line = line[:-1]
+                        line = line + " audit_backlog_limit=8192 audit=1 ipv6.disable=1 apparmor=1 security=apparmor\""
+            else:
+                fileTextList.append("GRUB_CMDLINE_LINUX=\"apparmor=1 security=apparmor\"")
+            
+            fileText = ""
             for line in fileTextList:
-                if "GRUB_CMDLINE_LINUX" in line:
-                    line = line[:-1]
-                    line = line + " audit_backlog_limit=8192 audit=1 ipv6.disable=1 apparmor=1 security=apparmor\""
-        else:
-            fileTextList.append("GRUB_CMDLINE_LINUX=\"apparmor=1 security=apparmor\"")
-        
-        fileText = ""
-        for line in fileTextList:
-            fileText = line+"\n"
+                fileText = line+"\n"
 
-        file.write(fileText)
+            file.write(fileText)
     # Refresh AppArmour
     os.system("update-grub")
     log.done("AppArmour configured!")
