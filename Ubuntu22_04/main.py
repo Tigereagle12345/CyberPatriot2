@@ -98,17 +98,17 @@ if args.userfile:
     if os.path.isfile(args.userfile):
         USERFILE = args.userfile
     else:
-        USERFILE = os.path.join(str(CURR_DIR), "/resources/users.txt")
+        USERFILE = os.path.join(CURR_DIR, "resources/users.txt")
 else:
-    USERFILE = os.path.join(str(CURR_DIR), "/resources/users.txt")
+    USERFILE = os.path.join(CURR_DIR, "resources/users.txt")
 
 if args.adminfile:
     if os.path.isfile(args.adminfile):
         ADMINFILE = args.adminfile
     else:
-        ADMINFILE = os.path.join(str(CURR_DIR), "/resources/admins.txt")
+        ADMINFILE = os.path.join(CURR_DIR, "resources/admins.txt")
 else:
-    ADMINFILE = os.path.join(str(CURR_DIR), "/resources/admins.txt")
+    ADMINFILE = os.path.join(CURR_DIR, "resources/admins.txt")
 
 try:
     USERS = psutil.users()
@@ -320,11 +320,11 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.text("Finding unowned files...")
     result = subprocess.run(["find", "/", "-nogroup", "-nouser"], stdout=subprocess.PIPE).split("\n")
     log.warn("These files are unowned:")
-    with open(os.path.join(CURR_DIR, "/output/unownedFiles.txt"), "w") as output:
+    with open(os.path.join(CURR_DIR, "output/unownedFiles.txt"), "w") as output:
         for file in result:
             log.warn("\n"+file)
             output.write("\n"+file)
-    log.warn(f"Files can be found in {os.path.join(CURR_DIR, '/output/unownedFiles.txt')}")
+    log.warn(f"Files can be found in {os.path.join(CURR_DIR, 'output/unownedFiles.txt')}")
     pause(log)
 
     # Ensure all users have a home directory
@@ -425,19 +425,19 @@ def firefox(log, USERS, CURR_DIR):
                             profiles.append(os.path.join(f"/home/{user.name}/snap/firefox/common/.mozilla/firefox/", line.replace("Path=", "", 1)))
 
     for profile in profiles:
-        with open(os.path.join(CURR_DIR, "/config/user.js")) as source:
-                if os.path.isfile(os.path.join(profile, "/user.js")):
+        with open(os.path.join(CURR_DIR, "config/user.js")) as source:
+                if os.path.isfile(os.path.join(profile, "user.js")):
                     with open(profile, "a") as file:
                         file.write(source.read())
                 else:
                     with open(profile, "w") as file:
                         file.write(source.read())
         
-    with open(os.path.join(CURR_DIR, "/config/local-settings.js"), "rb") as source:
-        with open(os.path.join(loc, "/defaults/pref/local-settings.js"), "w") as file:
+    with open(os.path.join(CURR_DIR, "config/local-settings.js"), "rb") as source:
+        with open(os.path.join(loc, "defaults/pref/local-settings.js"), "w") as file:
             file.write(source.read())
 
-    with open(os.path.join(CURR_DIR, "/config/mozilla.cfg"), "rb") as source:
+    with open(os.path.join(CURR_DIR, "config/mozilla.cfg"), "rb") as source:
         with open(os.path.join(loc, "mozilla.cfg"), "w") as file:
             file.write(source.read())
 
@@ -608,7 +608,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
     # Enable lockout for failed password attempts
     log.text("Enabling lockout for failed password attempts...")
     with open("/etc/pam.d/common-auth", "w") as file:
-        with open(os.path.join(CURR_DIR, "/config/common-auth"), "rb") as source:
+        with open(os.path.join(CURR_DIR, "config/common-auth"), "rb") as source:
             file.write(source.read())
     with open("/etc/pam.d/common-account", "a") as file:
         file.write("account required pam_faillock.so")
@@ -629,7 +629,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
     # Ensure password hashing algorithm is set to yescrypt (Latest recommended standards as of writing at 27/7/23)
     log.text("Setting hashing algorithm to yescrypt...")
     with open("/etc/pam.d/common-password", "w") as file:
-        with open(os.path.join(CURR_DIR, "/config/common-password"), "rb") as source:
+        with open(os.path.join(CURR_DIR, "config/common-password"), "rb") as source:
             file.write(source.read())
     log.done("Hashing algorithm set to yescrypt")
 
@@ -667,7 +667,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
     # Configure /etc/login.defs
     log.text("Configuring /etc/login.defs...")
     with open("/etc/login.defs", "w") as file:
-        with open(os.path.join(CURR_DIR, "/config/login.defs")) as source:
+        with open(os.path.join(CURR_DIR, "config/login.defs")) as source:
             file.write(source.read())
 
     os.system("useradd -D -f 30")
@@ -676,7 +676,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
 
     #Ensure default user umask is 027 or more restrictive
     with open("/etc/pam.d/common-session", "w") as file:
-        with open(os.path.join(CURR_DIR, "/config/common-session"), "rb") as source:
+        with open(os.path.join(CURR_DIR, "config/common-session"), "rb") as source:
             file.write(source.read())
 
     # Ensure system accounts are secured
@@ -954,55 +954,55 @@ def audit(log, CURR_DIR):
     # Set auditd rules
     log.text("Setting rules for auditd...")
     with open("/etc/audit/rules.d/50-scope.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-scope.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-scope.rules")))
     
     with open("/etc/audit/rules.d/50-user_emulation.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-user_emulation.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-user_emulation.rules")))
 
     with open("/etc/audit/rules.d/50-sudo.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-sudo.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-sudo.rules")))
     
     with open("/etc/audit/rules.d/50-time-change.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-time-change.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-time-change.rules")))
     
     with open("/etc/audit/rules.d/50-system_local.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-system_local.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-system_local.rules")))
     
     with open("/etc/audit/rules.d/50-access.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-access.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-access.rules")))
 
     with open("/etc/audit/rules.d/50-identity.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-identity.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-identity.rules")))
     
     with open("/etc/audit/rules.d/50-perm_mod.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-perm_mod.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-perm_mod.rules")))
     
     with open("/etc/audit/rules.d/50-mounts.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-mounts.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-mounts.rules")))
 
     with open("/etc/audit/rules.d/50-session.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-session.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-session.rules")))
 
     with open("/etc/audit/rules.d/50-login.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-login.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-login.rules")))
             
     with open("/etc/audit/rules.d/50-delete.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-delete.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-delete.rules")))
 
     with open("/etc/audit/rules.d/50-MAC-policy.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-MAC-policy.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-MAC-policy.rules")))
 
     with open("/etc/audit/rules.d/50-perm_chng.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-perm_chng.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-perm_chng.rules")))
 
     with open("/etc/audit/rules.d/50-priv_cmd.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-priv_cmd.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-priv_cmd.rules")))
 
     with open("/etc/audit/rules.d/50-usermod.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-usermod.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-usermod.rules")))
 
     with open("/etc/audit/rules.d/50-kernel_modules.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "/config/50-kernel_modules.rules")))
+        file.write(open(os.path.join(CURR_DIR, "config/50-kernel_modules.rules")))
 
     with open("/etc/audit/rules.d/99-finalize.rules", "w") as file:
         file.write("-e 2")
@@ -1484,7 +1484,7 @@ def bootloaderPass(log, MASTER_PASSWORD, CURR_DIR):
     # Writing config to custom grub file
     log.text("Writing config to custom grub file...")
     with open("/etc/grub.d/99_custom", "w") as grub:
-        with open(os.path.join(CURR_DIR, "/config/99_custom", "rb")) as file:
+        with open(os.path.join(CURR_DIR, "config/99_custom", "rb")) as file:
             text = file.read()
             text = text.replace("<username>", str(CURR_USER))
             text = text.replace("<encrypted-password>", str(output))
@@ -1510,7 +1510,7 @@ def aide(log, CURR_DIR):
 
     # Copy basic configuration to /etc/aide/aide.conf
     log.text("Copying basic configuration to /etc/aide/aide.conf...")
-    with open(os.path.join(CURR_DIR, "/config/aide.conf"), "rb") as file:
+    with open(os.path.join(CURR_DIR, "config/aide.conf"), "rb") as file:
         with open("/etc/aide/aide.conf", "a") as conf:
             conf.write(file.read())
     log.done("Basic configuration copied!")
