@@ -1663,7 +1663,7 @@ def authUsers(log, USERS, USERFILE, OSTYPE):
     users = [line for line in open(USERFILE, "r").readlines()]
     goodUsers = []
     for user in users:
-        users.append(user[0].replace("\n", ""))
+        goodUsers.append(user[0].replace("\n", ""))
     log.error(goodUsers)
     goodUsers.append("root")
     users = []
