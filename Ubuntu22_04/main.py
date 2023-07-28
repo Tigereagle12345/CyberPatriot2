@@ -32,7 +32,7 @@ class Log():
     def text(self, text):
         if self.level < 2:
             print(f"{self.OKCYAN}{text}")
-            print(f"{self.NORMALWHITE}", end="")
+            print(f"{self.NORMALWHITE}")
 
     def head(self, text):
         if self.level < 3:
