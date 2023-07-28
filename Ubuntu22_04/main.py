@@ -74,8 +74,8 @@ if os.path.isfile(args.userfile):
 else:
     USERFILE = os.path.join(CURR_DIR, "users.txt")
 
-if os.path.is_file(args.userfile):
-    ADMINFILE = args.userfile
+if os.path.isfile(args.adminfile):
+    ADMINFILE = args.adminfile
 else:
     ADMINFILE = os.path.join(CURR_DIR, "admins.txt")
 
