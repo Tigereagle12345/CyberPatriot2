@@ -72,12 +72,16 @@ if args.userfile:
         USERFILE = args.userfile
     else:
         USERFILE = os.path.join(CURR_DIR, "users.txt")
+else:
+    USERFILE = os.path.join(CURR_DIR, "users.txt")
 
 if args.adminfile:
     if os.path.isfile(args.adminfile):
         ADMINFILE = args.adminfile
     else:
         ADMINFILE = os.path.join(CURR_DIR, "admins.txt")
+else:
+    ADMINFILE = os.path.join(CURR_DIR, "admins.txt")
 
 try:
     USERS = psutil.users()
