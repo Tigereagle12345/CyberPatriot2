@@ -204,7 +204,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     installDep(log)
 
     # Authenticate users and user permissions
-    authUsers(log, USERNAMES, USERFILE, OSTYPE)
+    authUsers(log, USERS, USERFILE, OSTYPE)
     authAdmins(log, ADMINFILE, OSTYPE)
 
     # Enable and setup firewall
@@ -1335,12 +1335,8 @@ def gdm(log):
 
     # Setting GDM login banner message
     log.text("Configuring GDM login banner message...")
-    if os.path.exists("/etc/dconf/db/gdm.d/01-banner-message"):
-        with open("/etc/dconf/db/gdm.d/01-banner-message", "w") as file:
-            file.write("[org/gnome/login-screen]\nbanner-message-enable=true\nbanner-message-text='This system is monitered 24/7 and any intrusions will be prosecuted to the full extent of the law.'")
-    else:
-        with open("/etc/dconf/db/gdm.d/01-banner-message", "x") as file:
-            file.write("[org/gnome/login-screen]\nbanner-message-enable=true\nbanner-message-text='This system is monitered 24/7 and any intrusions will be prosecuted to the full extent of the law.'")
+    with open("/etc/dconf/db/gdm.d/01-banner-message", "w") as file:
+        file.write("[org/gnome/login-screen]\nbanner-message-enable=true\nbanner-message-text='This system is monitered 24/7 and any intrusions will be prosecuted to the full extent of the law.'")
     log.done("Configured GDM login banner message!")
 
     # Disable user list on the login screen
@@ -1663,10 +1659,15 @@ def ufw(log):
     log.text("---- End of Status -----")
 
 # Find Unauthorizerd Users
-def authUsers(log, USERNAMES, USERFILE, OSTYPE):
+def authUsers(log, USERS, USERFILE, OSTYPE):
     goodUsers = [line for line in open(USERFILE, "r").read()]
+    log.error(goodUsers)
     goodUsers.append("root")
-    for user in USERNAMES:
+    users = []
+    for user in USERS:
+        if user.pid > 999:
+            users.append(user.name)
+    for user in users:
         if not user in goodUsers:
             if answer(f"Unauthorized user '{user}' detected: Remove?", log):
                 try:
