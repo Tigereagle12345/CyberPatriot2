@@ -22,7 +22,7 @@ class Log():
         self.ENDC = '\033[0m'
         self.BOLD = '\033[1m'
         self.UNDERLINE = '\033[4m'
-        self.level = 2
+        self.level = 0
 
     def done(self, text):
         if self.level < 1:
@@ -30,22 +30,22 @@ class Log():
             print(f"{self.NORMALWHITE}", end="")
 
     def text(self, text):
-        if self.level > 2:
+        if self.level < 2:
             print(f"{self.OKBLUE}{text}")
             print(f"{self.NORMALWHITE}", end="")
 
     def head(self, text):
-        if self.level > 3:
+        if self.level < 3:
             print(f"{self.HEADER}{text}")
             print(f"{self.NORMALWHITE}", end="")
     
     def warn(self, text):
-        if self.level > 4:
+        if self.level < 4:
             print(f"{self.WARNING}{text}")
             print(f"{self.NORMALWHITE}", end="")
         
     def error(self, text):
-        if self.level > 5:
+        if self.level < 5:
             print(f"{self.FAIL}{text}")
             print(f"{self.NORMALWHITE}", end="")
 
