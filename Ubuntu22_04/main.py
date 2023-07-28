@@ -1486,7 +1486,7 @@ def bootloaderPass(log, MASTER_PASSWORD, CURR_DIR):
     # Writing config to custom grub file
     log.text("Writing config to custom grub file...")
     with open("/etc/grub.d/99_custom", "w") as grub:
-        with open(os.path.join(CURR_DIR, "config/99_custom", "r")) as file:
+        with open(os.path.join(CURR_DIR, "config/99_custom"), "r") as file:
             text = file.read()
             text = text.replace("<username>", str(CURR_USER))
             text = text.replace("<encrypted-password>", str(output))
