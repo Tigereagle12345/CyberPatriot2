@@ -87,8 +87,6 @@ if args.verbose:
 
 CURR_DIR = sys.path[0]
 SYSTEM = platform.platform()
-
-print(CURR_DIR)
     
 WINDOWS = "windows" in SYSTEM.lower()
 LINUX = "linux" in SYSTEM.lower()
