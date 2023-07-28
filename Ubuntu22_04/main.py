@@ -88,7 +88,7 @@ if args.verbose:
 CURR_DIR = sys.path[0]
 SYSTEM = platform.platform()
 
-print(SYSTEM)
+print(CURR_DIR)
     
 WINDOWS = "windows" in SYSTEM.lower()
 LINUX = "linux" in SYSTEM.lower()
@@ -109,9 +109,6 @@ if args.adminfile:
         ADMINFILE = os.path.join(CURR_DIR, "/resources/admins.txt")
 else:
     ADMINFILE = os.path.join(CURR_DIR, "/resources/admins.txt")
-
-log.error(USERFILE)
-log.error(ADMINFILE)
 
 try:
     USERS = psutil.users()
@@ -148,8 +145,6 @@ def pause(log):
 def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD):
     WINDOWS = OSTYPE[0]
     LINUX = OSTYPE[1]
-    print(WINDOWS)
-    print(LINUX)
     if LINUX:
         log.head("Starting Ubuntu Script...")
         ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD)
