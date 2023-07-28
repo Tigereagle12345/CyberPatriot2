@@ -49,7 +49,7 @@ class Log():
             print(f"{self.FAIL}{self.BOLD}{text}", end="")
             print(f"{self.NORMALWHITE}")
     
-    def warn(self, text):
+    def answer(self, text):
         print(f"{self.WARNING}{self.BOLD}{text}", end="")
         print(f"{self.NORMALWHITE}", end="")
 
@@ -132,7 +132,7 @@ def answer(text, log):
     YES = ["Y", "y", "YES", "Yes", "yes"]
     NO = ["N", "n", "NO", "No", "no"]
     
-    proceed = input(log.warn(f"{text} Y/N: "))
+    proceed = input(log.answer(f"{text} Y/N: "))
     if proceed in YES:
         return True
     elif proceed in NO:
