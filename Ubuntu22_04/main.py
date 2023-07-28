@@ -110,6 +110,9 @@ if args.adminfile:
 else:
     ADMINFILE = os.path.join(CURR_DIR, "/resources/admins.txt")
 
+log.error(USERFILE)
+log.error(ADMINFILE)
+
 try:
     USERS = psutil.users()
     USERNAMES = [user.name for user in USERS]
