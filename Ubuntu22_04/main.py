@@ -133,7 +133,7 @@ def answer(text, log):
     NO = ["N", "n", "NO", "No", "no"]
     
     log.answer(f"{text} Y/N:")
-    proceed = input("")
+    proceed = input(" ")
     if proceed in YES:
         return True
     elif proceed in NO:
@@ -143,7 +143,7 @@ def answer(text, log):
 
 def pause(log):
     log.answer("Press anything to continue: ")
-    cont = input("")
+    cont = input(" ")
 
 def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD):
     WINDOWS = OSTYPE[0]
