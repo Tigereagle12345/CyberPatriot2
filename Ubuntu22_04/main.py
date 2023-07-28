@@ -127,29 +127,30 @@ def answer(text, log):
 def pause(log):
     cont = input(log.warn("Press anything to continue: "))
 
-def mainScript(log, CURR_DIR, SYSTEM, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER):
+def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER):
     WINDOWS = OSTYPE[0]
     LINUX = OSTYPE[1]
-    if not WINDOWS or not LINUX:
+    print(WINDOWS)
+    print(LINUX)
+    if LINUX:
+        log.normal("Starting Ubuntu Script...")
+        ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER)
+    elif WINDOWS:
+        sys.exit(log.error("Windows is not currently supported!"))
+    else:
         if answer("OS Unknown, Continue with Ubuntu?", log):
             OSTYPE[1] = True
             if os.getuid() == 0:
-                ubuntu2104(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER)
+                ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER)
             else:
                 sys.exit(log.error("This Script Requires Root Priveledges!"))
         else:
             sys.exit(log.error("Ok then, exiting!"))
-            
-    elif WINDOWS:
-        sys.exit(log.error("Windows is not currently supported!"))
-    else:
-        log.normal("Starting Ubuntu Script...")
-        ubuntu2104(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER)
 
 #----- UBUNTU 22.04 -----
 
 # Start Script for Ubuntu
-def ubuntu2104(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER):
+def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER):
     # Configure dpkg
     os.system("dpkg --configure -a")
 
