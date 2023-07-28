@@ -1661,17 +1661,17 @@ def authUsers(log, USERNAMES, USERFILE, OSTYPE):
     goodUsers.append("root")
     for user in goodUsers:
         if user not in USERNAMES:
-            if answer(f"Unauthorized user {user} detected: Remove?", log):
+            if answer(f"Unauthorized user '{user}' detected: Remove?", log):
                 try:
                     LINUX = OSTYPE[1]
                     if LINUX:
                         output = subprocess.run(["deluser", user])
                     if output.returncode == 0:
-                        log.done(f"User {user} deleted!")
+                        log.done(f"User '{user}' deleted!")
                 except:
-                    log.error(f"Failed to remove user {user}!")
+                    log.error(f"Failed to remove user '{user}'!")
             else:
-                log.text(f"Proceeding without deleting user {user}.")
+                log.text(f"Proceeding without deleting user '{user}'.")
 
 # Find Unauthorized Administrators
 def authAdmins(log, ADMINFILE, OSTYPE):
@@ -1686,7 +1686,10 @@ def authAdmins(log, ADMINFILE, OSTYPE):
 
                 groupName = groupInfo[0]
                 groupGID = groupInfo[2]
-                groupUsers = groupInfo[3].split(",")
+                if len(groupInfo) == 4:
+                    groupUsers = groupInfo[3].split(",")
+                else:
+                    groupUsers = [""]
 
                 GROUPS[groupName] = {}
                 GROUPS[groupName]["GID"] = groupGID
@@ -1696,33 +1699,33 @@ def authAdmins(log, ADMINFILE, OSTYPE):
     if not GROUPS["adm"]["Users"][0] == "":
         for admin in GROUPS["adm"]["Users"]:
             if admin not in goodAdmins:
-                if answer(f"Unauthorized user {admin} in the adm group: Remove?", log):
+                if answer(f"Unauthorized user '{admin}' in the adm group: Remove?", log):
                     try:
                         LINUX = OSTYPE[1]
                         if LINUX:
                             output = subprocess.run(["deluser", admin, "adm"])
                         if output.returncode == 0:
-                            log.done(f"User {admin} removed from adm group!")
+                            log.done(f"User '{admin}' removed from adm group!")
                     except:
-                        log.error(f"Failed to remove {admin} from adm group!")
+                        log.error(f"Failed to remove '{admin}' from adm group!")
                 else:
-                    log.text(f"Proceeding without removing {admin} from the adm group.")
+                    log.text(f"Proceeding without removing '{admin}' from the adm group.")
     
     # Check members of the sudo group
     if not GROUPS["sudo"]["Users"][0] == "":
         for admin in GROUPS["sudo"]["Users"]:
             if admin not in goodAdmins:
-                if answer(f"Unauthorized user {admin} in the sudo group: Remove?", log):
+                if answer(f"Unauthorized user '{admin}' in the sudo group: Remove?", log):
                     try:
                         LINUX = OSTYPE[1]
                         if LINUX:
                             output = subprocess.run(["deluser", admin, "sudo"])
                         if output.returncode == 0:
-                            log.done(f"User {admin} removed from sudo group!")
+                            log.done(f"User '{admin}' removed from sudo group!")
                     except:
-                        log.error(f"Failed to remove {admin} from sudo group!")
+                        log.error(f"Failed to remove '{admin}' from sudo group!")
                 else:
-                    log.text(f"Proceeding without removing {admin} from the sudo group.")
+                    log.text(f"Proceeding without removing '{admin}' from the sudo group.")
 
 # Run the main file
 mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD)
