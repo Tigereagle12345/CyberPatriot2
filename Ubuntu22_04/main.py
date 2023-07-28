@@ -29,18 +29,23 @@ class Log():
             print(f"{self.OKGREEN}{text}")
             print(f"{self.NORMALWHITE}", end="")
 
-    def normal(self, text):
+    def text(self, text):
         if self.level > 2:
             print(f"{self.OKBLUE}{text}")
             print(f"{self.NORMALWHITE}", end="")
+
+    def head(self, text):
+        if self.level > 3:
+            print(f"{self.HEADER}{text}")
+            print(f"{self.NORMALWHITE}", end="")
     
     def warn(self, text):
-        if self.level > 3:
+        if self.level > 4:
             print(f"{self.WARNING}{text}")
             print(f"{self.NORMALWHITE}", end="")
         
     def error(self, text):
-        if self.level > 4:
+        if self.level > 5:
             print(f"{self.FAIL}{text}")
             print(f"{self.NORMALWHITE}", end="")
 
@@ -49,10 +54,12 @@ class Log():
             self.level = 0
         elif level == "normal":
             self.level = 1
-        elif level == "warn":
+        elif level == "head":
             self.level = 2
-        elif level == "error":
+        elif level == "warn":
             self.level = 3
+        elif level == "error":
+            self.level = 4
 
 #----- End Of Classes -----
 
@@ -138,7 +145,7 @@ def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MAS
     print(WINDOWS)
     print(LINUX)
     if LINUX:
-        log.normal("Starting Ubuntu Script...")
+        log.head("Starting Ubuntu Script...")
         ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD)
     elif WINDOWS:
         sys.exit(log.error("Windows is not currently supported!"))
