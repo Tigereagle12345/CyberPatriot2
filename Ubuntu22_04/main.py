@@ -36,7 +36,7 @@ class Log():
 
     def head(self, text):
         if self.level < 3:
-            print(f"{self.HEADER}{self.BOLD}{text}", end="")
+            print(f"{self.HEADER}{self.BOLD}{self.UNDERLINE}{text}", end="")
             print(f"{self.NORMALWHITE}")
     
     def warn(self, text):
@@ -203,8 +203,8 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     installDep(log)
 
     # Authenticate users and user permissions
-    authUsers(log, USERS, USERNAMES, USERFILE, OSTYPE)
-    GROUPS = authAdmins(log, ADMINFILE, OSTYPE)
+    authUsers(log, USERNAMES, USERFILE, OSTYPE)
+    authAdmins(log, ADMINFILE, OSTYPE)
 
     # Enable and setup firewall
     ufw(log)
@@ -373,6 +373,16 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     # Confgure Firefox settings
     if answer("Is firefox installed?", log):
         firefox(log, USERS, CURR_DIR)
+
+    # Remove excess packages
+    log.text("Removing excess packages...")
+    os.system("apt autoremove -y")
+    log.text("Removed excess packages!")
+
+    # Reboot
+    log.warn("The device needs to reboot in order to save changes!")
+    pause(log)
+    os.system("reboot")
 
 # ----- Functions -----
 # Confgure Firefox settings
@@ -1712,8 +1722,6 @@ def authAdmins(log, ADMINFILE, OSTYPE):
                         log.error(f"Failed to remove {admin} from sudo group!")
                 else:
                     log.text(f"Proceeding without removing {admin} from the sudo group.")
-    
-    return GROUPS
 
 # Run the main file
 mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD)
