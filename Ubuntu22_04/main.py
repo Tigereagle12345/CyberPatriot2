@@ -127,7 +127,7 @@ def answer(text, log):
 def pause(log):
     cont = input(log.warn("Press anything to continue: "))
 
-def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER):
+def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD):
     WINDOWS = OSTYPE[0]
     LINUX = OSTYPE[1]
     print(WINDOWS)
