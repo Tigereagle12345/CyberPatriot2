@@ -7,6 +7,6 @@ apt install python3-pip -y
 PWD=$(pwd)
 DIRECTORY=$(cd `dirname $0` && pwd)
 
-pip install -r "$DIRECTORY/requirements.txt"
+sudo -u $(logname) pip install -r "$DIRECTORY/requirements.txt"
 
 echo "Finished setting up!"
