@@ -262,7 +262,8 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
 
     # Remove MOTD
     log.text("Removing the MOTD...")
-    os.remove("/etc/motd")
+    if os.path.isfile:
+        os.remove("/etc/motd")
     log.done("Removed MOTD!")
 
     # Configure warning banners
