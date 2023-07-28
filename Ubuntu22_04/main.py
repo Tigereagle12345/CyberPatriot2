@@ -1450,15 +1450,16 @@ def restrictCoredumps(log):
     with open("/etc/security/limits.conf", "a") as file:
         file.write("\n* hard core 0")
     
-    with open("/etc/security/limits.conf", "rw") as file:
-        fileText = file.read()
+    with open("/etc/security/limits.conf", "w") as file:
+        with open("/etc/security/limits.conf", "r") as source:
+            fileText = source.read()
 
-        if "fs.suid_dumpable = " in fileText:
-            re.sub(r"fs.suid_dumpable = \d", "fs.suid_dumpable = 0", fileText)
-        else:
-            fileText = fileText + "\nfs.suid_dumpable = 0"
+            if "fs.suid_dumpable = " in fileText:
+                re.sub(r"fs.suid_dumpable = \d", "fs.suid_dumpable = 0", fileText)
+            else:
+                fileText = fileText + "\nfs.suid_dumpable = 0"
 
-        file.write(fileText)
+            file.write(fileText)
     os.system("sysctl -w fs.suid_dumpable=0")
 
     result = subprocess.run(["systemctl", "is-enabled coredump.service"], stdout=subprocess.PIPE)
