@@ -31,7 +31,7 @@ class Log():
 
     def text(self, text):
         if self.level < 2:
-            print(f"{self.NORMALWHITE}{text}")
+            print(f"{self.BOLD}{text}")
             print(f"{self.NORMALWHITE}", end="")
 
     def head(self, text):
