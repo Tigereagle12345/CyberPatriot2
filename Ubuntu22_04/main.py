@@ -67,17 +67,17 @@ WINDOWS = "windows" in SYSTEM.lower()
 LINUX = "linux" in SYSTEM.lower()
 OSTYPE = (WINDOWS, LINUX)
 
-print(args.userfile)
+if args.userfile:
+    if os.path.isfile(args.userfile):
+        USERFILE = args.userfile
+    else:
+        USERFILE = os.path.join(CURR_DIR, "users.txt")
 
-if os.path.isfile(args.userfile):
-    USERFILE = args.userfile
-else:
-    USERFILE = os.path.join(CURR_DIR, "users.txt")
-
-if os.path.isfile(args.adminfile):
-    ADMINFILE = args.adminfile
-else:
-    ADMINFILE = os.path.join(CURR_DIR, "admins.txt")
+if args.adminfile:
+    if os.path.isfile(args.adminfile):
+        ADMINFILE = args.adminfile
+    else:
+        ADMINFILE = os.path.join(CURR_DIR, "admins.txt")
 
 try:
     USERS = psutil.users()
