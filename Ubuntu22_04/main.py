@@ -262,7 +262,8 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
 
     # Remove MOTD
     log.text("Removing the MOTD...")
-    if os.path.exists:
+
+    if os.path.exists("/etc/motd"):
         os.remove("/etc/motd")
     log.done("Removed MOTD!")
 
