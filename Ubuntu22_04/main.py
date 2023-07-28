@@ -60,6 +60,9 @@ class Log():
             self.level = 3
         elif level == "error":
             self.level = 4
+        else:
+            self.level == 0
+            log.error("Please provide a logging level!\nOptions:\n-'done'\n-'text'\n-'head'\n-'warn'\n-'error'")
 
 #----- End Of Classes -----
 
@@ -80,7 +83,7 @@ args = parser.parse_args()
 # Create Logger
 log = Log()
 if args.verbose:
-    log.updateLevel()
+    log.updateLevel("debug")
 
 CURR_DIR = sys.path[0]
 SYSTEM = platform.platform()
