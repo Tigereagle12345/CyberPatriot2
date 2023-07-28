@@ -26,18 +26,22 @@ class Log():
     def done(self, text):
         if self.level < 1:
             print(f"{self.OKGREEN}{text}")
+            print("", end="")
 
     def normal(self, text):
         if self.level > 2:
             print(f"{self.OKBLUE}{text}")
+            print("", end="")
     
     def warn(self, text):
         if self.level > 3:
             print(f"{self.WARNING}{text}")
+            print("", end="")
         
     def error(self, text):
         if self.level > 4:
             print(f"{self.FAIL}{text}")
+            print("", end="")
 
     def updateLevel(self, level="debug"):
         if level == "debug":
