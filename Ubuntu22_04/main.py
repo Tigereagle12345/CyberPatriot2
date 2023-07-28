@@ -26,28 +26,28 @@ class Log():
 
     def done(self, text):
         if self.level < 1:
-            print(f"{self.OKGREEN}{self.BOLD}{text}")
-            print(f"{self.NORMALWHITE}", end="")
+            print(f"{self.OKGREEN}{self.BOLD}{text}", end="")
+            print(f"{self.NORMALWHITE}")
 
     def text(self, text):
         if self.level < 2:
-            print(f"{self.OKCYAN}{self.BOLD}{text}")
-            print(f"{self.NORMALWHITE}", end=" ")
+            print(f"{self.OKCYAN}{self.BOLD}{text}", end="")
+            print(f"{self.NORMALWHITE}")
 
     def head(self, text):
         if self.level < 3:
-            print(f"{self.HEADER}{self.BOLD}{text}")
-            print(f"{self.NORMALWHITE}", end="")
+            print(f"{self.HEADER}{self.BOLD}{text}", end="")
+            print(f"{self.NORMALWHITE}")
     
     def warn(self, text):
         if self.level < 4:
-            print(f"{self.WARNING}{self.BOLD}{text}")
-            print(f"{self.NORMALWHITE}", end="")
+            print(f"{self.WARNING}{self.BOLD}{text}", end="")
+            print(f"{self.NORMALWHITE}")
         
     def error(self, text):
         if self.level < 5:
-            print(f"{self.FAIL}{self.BOLD}{text}")
-            print(f"{self.NORMALWHITE}", end="")
+            print(f"{self.FAIL}{self.BOLD}{text}", end="")
+            print(f"{self.NORMALWHITE}")
 
     def updateLevel(self, level="debug"):
         if level == "debug":
