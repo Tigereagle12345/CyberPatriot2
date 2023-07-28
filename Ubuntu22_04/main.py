@@ -29,7 +29,7 @@ class Log():
 
     def normal(self, text):
         if self.level > 2:
-            print(f"{self.BOLD}{text}")
+            print(f"{self.OKBLUE}{text}")
     
     def warn(self, text):
         if self.level > 3:
@@ -68,7 +68,7 @@ args = parser.parse_args()
 # Create Logger
 log = Log()
 if args.verbose:
-    log.updateLevel("debug")
+    log.updateLevel()
 
 CURR_DIR = sys.path[0]
 SYSTEM = platform.platform()
