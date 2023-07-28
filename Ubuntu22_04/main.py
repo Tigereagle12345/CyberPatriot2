@@ -67,6 +67,8 @@ WINDOWS = "windows" in SYSTEM.lower()
 LINUX = "linux" in SYSTEM.lower()
 OSTYPE = (WINDOWS, LINUX)
 
+print(args.userfile)
+
 if os.path.isfile(args.userfile):
     USERFILE = args.userfile
 else:
