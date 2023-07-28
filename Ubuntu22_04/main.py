@@ -98,9 +98,6 @@ try:
     USERNAMES = [user.name for user in USERS]
 except:
     USERS, USERNAMES = False
-    
-YES = ["Y", "y", "YES", "Yes", "yes"]
-NO = ["N", "n", "NO", "No", "no"]
 
 MASTER_PASSWORD = "mT80F0!t07zCg@D#"
 
@@ -113,8 +110,8 @@ log.error(f"IMPORTANT: Automatic password used by the script is: {MASTER_PASSWOR
 
 # Start Script
 def answer(text, log):
-    global YES
-    global NO
+    YES = ["Y", "y", "YES", "Yes", "yes"]
+    NO = ["N", "n", "NO", "No", "no"]
     
     proceed = input(log.warn(f"{text} Y/N\n"))
     if proceed in YES:
