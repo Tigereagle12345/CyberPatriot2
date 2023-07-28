@@ -134,14 +134,14 @@ def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MAS
     print(LINUX)
     if LINUX:
         log.normal("Starting Ubuntu Script...")
-        ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER)
+        ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD)
     elif WINDOWS:
         sys.exit(log.error("Windows is not currently supported!"))
     else:
         if answer("OS Unknown, Continue with Ubuntu?", log):
             OSTYPE[1] = True
             if os.getuid() == 0:
-                ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER)
+                ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD)
             else:
                 sys.exit(log.error("This Script Requires Root Priveledges!"))
         else:
@@ -150,7 +150,7 @@ def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MAS
 #----- UBUNTU 22.04 -----
 
 # Start Script for Ubuntu
-def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER):
+def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD):
     # Configure dpkg
     os.system("dpkg --configure -a")
 
@@ -1701,4 +1701,4 @@ def authAdmins(log, ADMINFILE, OSTYPE):
     return GROUPS
 
 # Run the main file
-mainScript(log, CURR_DIR, SYSTEM, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER)
+mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD)
