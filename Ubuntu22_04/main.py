@@ -134,12 +134,11 @@ def answer(text, log):
     proceed = input(log.warn(f"{text} Y/N: "))
     log.clear()
     if proceed in YES:
-        retbool = True
+        return True
     elif proceed in NO:
-        retbool = False
+        return False
     else: 
         answer(text, log)
-    return retbool
 
 def pause(log):
     cont = input(log.warn("Press anything to continue: "))
