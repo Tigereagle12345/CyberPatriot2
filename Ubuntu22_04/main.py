@@ -1480,8 +1480,7 @@ def bootloaderPass(log, MASTER_PASSWORD, CURR_DIR):
     setup.expect(pexpect.EOF)
     output = setup.before
 
-    output = output.split("PBKDF2 hash of your password is ")
-    output = output[1]
+    output = output.replace("PBKDF2 hash of your password is ", "")
     log.done("Bootloader password set!")
 
     # Writing config to custom grub file
