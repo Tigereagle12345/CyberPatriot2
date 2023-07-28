@@ -1478,7 +1478,7 @@ def bootloaderPass(log, MASTER_PASSWORD, CURR_DIR):
     setup.expect("Reenter password:")
     setup.sendline(f"{MASTER_PASSWORD}")
     setup.expect(pexpect.EOF)
-    output = setup.before
+    output = str(setup.before)
 
     output = output.replace("PBKDF2 hash of your password is ", "")
     log.done("Bootloader password set!")
