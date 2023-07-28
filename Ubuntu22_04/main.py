@@ -423,7 +423,7 @@ def firefox(log, USERS, CURR_DIR):
         if user.pid > 999:
             if os.path.isdir(f"/home/{user.name}"):
                 if os.path.isfile(f"/home/{user.name}/snap/firefox/common/.mozilla/firefox/profiles.ini"):
-                    for line in open(f"/home/{user.name}/snap/firefox/common/.mozilla/firefox/profiles.ini", "rb").read():
+                    for line in open(f"/home/{user.name}/snap/firefox/common/.mozilla/firefox/profiles.ini", "r").read():
                         if "Path=" in line:
                             profiles.append(os.path.join(f"/home/{user.name}/snap/firefox/common/.mozilla/firefox/", line.replace("Path=", "", 1)))
 
@@ -436,11 +436,11 @@ def firefox(log, USERS, CURR_DIR):
                     with open(profile, "w") as file:
                         file.write(source.read())
         
-    with open(os.path.join(CURR_DIR, "config/local-settings.js"), "rb") as source:
+    with open(os.path.join(CURR_DIR, "config/local-settings.js"), "r") as source:
         with open(os.path.join(loc, "defaults/pref/local-settings.js"), "w") as file:
             file.write(source.read())
 
-    with open(os.path.join(CURR_DIR, "config/mozilla.cfg"), "rb") as source:
+    with open(os.path.join(CURR_DIR, "config/mozilla.cfg"), "r") as source:
         with open(os.path.join(loc, "mozilla.cfg"), "w") as file:
             file.write(source.read())
 
@@ -492,7 +492,7 @@ def delUser(log, USERNAMES):
 # Manage groups
 def groupMng(log, USERS):
     GROUPS = {}
-    with open("/etc/group", "rb") as file:
+    with open("/etc/group", "r") as file:
         for line in file.read():
             GROUPS[line.split(":")[0]]
             GROUPS[line.split(":")[0]]["Users"] = line.split(":")[3]
@@ -611,7 +611,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
     # Enable lockout for failed password attempts
     log.text("Enabling lockout for failed password attempts...")
     with open("/etc/pam.d/common-auth", "w") as file:
-        with open(os.path.join(CURR_DIR, "config/common-auth"), "rb") as source:
+        with open(os.path.join(CURR_DIR, "config/common-auth"), "r") as source:
             file.write(source.read())
     with open("/etc/pam.d/common-account", "a") as file:
         file.write("account required pam_faillock.so")
@@ -632,7 +632,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
     # Ensure password hashing algorithm is set to yescrypt (Latest recommended standards as of writing at 27/7/23)
     log.text("Setting hashing algorithm to yescrypt...")
     with open("/etc/pam.d/common-password", "w") as file:
-        with open(os.path.join(CURR_DIR, "config/common-password"), "rb") as source:
+        with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
             file.write(source.read())
     log.done("Hashing algorithm set to yescrypt")
 
@@ -679,7 +679,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
 
     #Ensure default user umask is 027 or more restrictive
     with open("/etc/pam.d/common-session", "w") as file:
-        with open(os.path.join(CURR_DIR, "config/common-session"), "rb") as source:
+        with open(os.path.join(CURR_DIR, "config/common-session"), "r") as source:
             file.write(source.read())
 
     # Ensure system accounts are secured
@@ -1487,7 +1487,7 @@ def bootloaderPass(log, MASTER_PASSWORD, CURR_DIR):
     # Writing config to custom grub file
     log.text("Writing config to custom grub file...")
     with open("/etc/grub.d/99_custom", "w") as grub:
-        with open(os.path.join(CURR_DIR, "config/99_custom", "rb")) as file:
+        with open(os.path.join(CURR_DIR, "config/99_custom", "r")) as file:
             text = file.read()
             text = text.replace("<username>", str(CURR_USER))
             text = text.replace("<encrypted-password>", str(output))
@@ -1513,7 +1513,7 @@ def aide(log, CURR_DIR):
 
     # Copy basic configuration to /etc/aide/aide.conf
     log.text("Copying basic configuration to /etc/aide/aide.conf...")
-    with open(os.path.join(CURR_DIR, "config/aide.conf"), "rb") as file:
+    with open(os.path.join(CURR_DIR, "config/aide.conf"), "r") as file:
         with open("/etc/aide/aide.conf", "a") as conf:
             conf.write(file.read())
     log.done("Basic configuration copied!")
@@ -1657,7 +1657,7 @@ def ufw(log):
 
 # Find Unauthorizerd Users
 def authUsers(log, USERNAMES, USERFILE, OSTYPE):
-    goodUsers = [line for line in open(USERFILE, "rb").read()]
+    goodUsers = [line for line in open(USERFILE, "r").read()]
     goodUsers.append("root")
     for user in goodUsers:
         if user not in USERNAMES:
@@ -1675,11 +1675,11 @@ def authUsers(log, USERNAMES, USERFILE, OSTYPE):
 
 # Find Unauthorized Administrators
 def authAdmins(log, ADMINFILE, OSTYPE):
-    goodAdmins = [line for line in open(ADMINFILE, "rb")]
+    goodAdmins = [line for line in open(ADMINFILE, "r")]
     goodAdmins.append("syslog")
 
     GROUPS = {}
-    with open("/etc/group", "rb") as GROUPFILE:
+    with open("/etc/group", "r") as GROUPFILE:
         for group in GROUPFILE:
             if not group == "":
                 groupInfo = group.split(":")
