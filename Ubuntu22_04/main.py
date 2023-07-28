@@ -130,7 +130,7 @@ def pause(log):
 def mainScript(log, CURR_DIR, SYSTEM, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER):
     WINDOWS = OSTYPE[0]
     LINUX = OSTYPE[1]
-    if not WINDOWS or LINUX:
+    if not WINDOWS or not LINUX:
         if answer("OS Unknown, Continue with Ubuntu?", log):
             OSTYPE[1] = True
             if os.getuid() == 0:
