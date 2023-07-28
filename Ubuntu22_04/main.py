@@ -128,7 +128,7 @@ def answer(text, log):
     YES = ["Y", "y", "YES", "Yes", "yes"]
     NO = ["N", "n", "NO", "No", "no"]
     
-    proceed = input(log.warn(f"{text} Y/N\n"))
+    proceed = input(log.warn(f"{text} Y/N: "))
     if proceed in YES:
         retbool = True
     elif proceed in NO:
