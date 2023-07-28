@@ -13,6 +13,7 @@ import re
 class Log():
     def __init__(self):
         self.HEADER = '\033[95m'
+        self.NORMALWHITE = '"\033[1;37;40m'
         self.OKBLUE = '\033[94m'
         self.OKCYAN = '\033[96m'
         self.OKGREEN = '\033[92m'
@@ -26,22 +27,22 @@ class Log():
     def done(self, text):
         if self.level < 1:
             print(f"{self.OKGREEN}{text}")
-            print(f"{self.BOLD}", end="")
+            print(f"{self.NORMALWHITE}", end="")
 
     def normal(self, text):
         if self.level > 2:
             print(f"{self.OKBLUE}{text}")
-            print(f"{self.BOLD}", end="")
+            print(f"{self.NORMALWHITE}", end="")
     
     def warn(self, text):
         if self.level > 3:
             print(f"{self.WARNING}{text}")
-            print(f"{self.BOLD}", end="")
+            print(f"{self.NORMALWHITE}", end="")
         
     def error(self, text):
         if self.level > 4:
             print(f"{self.FAIL}{text}")
-            print(f"{self.BOLD}", end="")
+            print(f"{self.NORMALWHITE}", end="")
 
     def updateLevel(self, level="debug"):
         if level == "debug":
