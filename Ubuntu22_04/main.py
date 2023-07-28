@@ -1683,7 +1683,7 @@ def authUsers(log, USERS, USERFILE, OSTYPE):
 
 # Find Unauthorized Administrators
 def authAdmins(log, ADMINFILE, OSTYPE):
-    goodAdmins = [line for line in open(ADMINFILE, "r").read()]
+    goodAdmins = [open(ADMINFILE, "r").readlines()]
     goodAdmins.append("syslog")
 
     GROUPS = {}
