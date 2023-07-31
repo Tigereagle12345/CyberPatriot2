@@ -1676,7 +1676,8 @@ def authUsers(log, USERS, USERFILE, OSTYPE):
         users = file.read().split("\n")
         goodUsers = []
         for user in users:
-            goodUsers.append(user.replace("\n", ""))
+            if not user == "\n" or user == "":
+                goodUsers.append(user.replace("\n", ""))
     log.error(goodUsers)
     goodUsers.append("root")
     users = []
