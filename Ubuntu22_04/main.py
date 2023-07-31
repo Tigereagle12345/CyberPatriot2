@@ -1333,7 +1333,7 @@ def gdm(log):
         file.write("user-db:user\nsystem-db:gdm\nfile-db:/usr/share/gdm/greeter-dconf-defaults")
     log.done("Configured GDM login profile settings!")
 
-    # Create a gdm.d directory if it exists
+    # Create a gdm.d directory if it doesn't exists
     if not os.path.exists("/etc/dconf/db/gdm.d/"):
         os.mkdir("/etc/dconf/db/gdm.d/")
 
@@ -1355,12 +1355,16 @@ def gdm(log):
     with open("/etc/dconf/profile/user", "w") as file:
         file.write("user-db:user\nsystem-db:local")
 
-    # Create a local.d directory if it exists
+    # Create a local.d directory if it doesn't exists
     if not os.path.exists("/etc/dconf/db/local.d/"):
         os.mkdir("/etc/dconf/db/local.d/")
     
-    with open(" /etc/dconf/db/local.d/00-screensaver", "w") as file:
+    with open("/etc/dconf/db/local.d/00-screensaver", "w") as file:
         file.write("[org/gnome/desktop/session]\nidle-delay=uint32 120\n[org/gnome/desktop/screensaver]\nlock-delay=uint32 0")
+
+    # Create a local.d/locks directory if it doesn't exists
+    if not os.path.exists("/etc/dconf/db/local.d/locks/"):
+        os.mkdir("/etc/dconf/db/local.d/locks/")
 
     with open("/etc/dconf/db/local.d/locks/screensaver", "w") as file:
         file.write("/org/gnome/desktop/session/idle-delay\n/org/gnome/desktop/screensaver/lock-delay")
