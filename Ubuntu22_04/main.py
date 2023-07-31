@@ -888,7 +888,8 @@ def cron(log):
 
     # Delete the /etc/cron.deny file
     log.text("Deleting the /etc/cron.deny file...")
-    os.remove("/etc/cron.deny")
+    if os.path.isfile("/etc/cron.deny"):
+        os.remove("/etc/cron.deny")
     log.done("Deleted the /etc/cron.deny file!")
 
     # Create an /etc/cron.allow file and set permissions
