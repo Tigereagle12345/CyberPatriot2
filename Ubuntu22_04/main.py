@@ -695,7 +695,10 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
         if user.pid < 1000:
             SYSUSERS.append(user.name)
     for user in ["root", "sync", "shutdown", "halt"]:
-        SYSUSERS.remove(user)
+        try:
+            SYSUSERS.remove(user)
+        except:
+            pass
     for user in SYSUSERS:
         os.system(f"usermod -s $(which nologin) {user}")
         os.system(f"usermod -L {user}")
