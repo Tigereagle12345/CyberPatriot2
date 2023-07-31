@@ -276,7 +276,8 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     # Ensure XDCMP is not enabled
     log.text("Ensuring XDCMP is not enabled...")
     with open("/etc/gdm3/custom.conf", "w") as file:
-        file.write(file.read().replace("Enable=true", ""))
+        with open("/etc/gdm3/custom.conf", "r") as source:
+            file.write(source.read().replace("Enable=true", ""))
     log.done("Ensured XDCMP is not enabled!")
 
     # Install and configure chrony
@@ -1676,7 +1677,7 @@ def authUsers(log, USERS, USERFILE, OSTYPE):
         for user in users:
             if not user == "\n" or user == "":
                 goodUsers.append(user.replace("\n", ""))
-    log.error(goodUsers)
+    #log.error(goodUsers)
     goodUsers.append("root")
     users = []
     for user in USERS:
