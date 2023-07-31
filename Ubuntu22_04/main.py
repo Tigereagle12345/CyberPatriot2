@@ -969,8 +969,9 @@ def audit(log, CURR_DIR):
     log.text("Setting rules for auditd...")
     with open("/etc/audit/audit.rules", "w") as file:
         file.write(open(os.path.join(CURR_DIR, "config/audit.rules")).read())
-        os.system("cat /etc/audit/audit.rules")
-        pause()
+    with open("/etc/audit/audit.rules", "r") as file:
+        log.error(file.read())
+        pause(log)
 
     os.system("augenrules --load")
     os.system("service auditd restart")
