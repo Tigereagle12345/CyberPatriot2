@@ -894,9 +894,12 @@ def cron(log):
 
     # Create an /etc/cron.allow file and set permissions
     log.text("Creating an /etc/cron.allow file...")
-    with open("/etc/cron.allow", "x") as file:
-        file.write("")
-    log.done("Created a /etc/cron.allow file!")
+    try:
+        with open("/etc/cron.allow", "x") as file:
+            file.write("")
+        log.done("Created a /etc/cron.allow file!")
+    except:
+        log.done("/etc/cron.allow already exists!")
 
     log.text("Setting permissions on /etc/cron.allow...")
     os.system("chmod g-wx,o-rwx /etc/cron.allow")
@@ -910,9 +913,12 @@ def cron(log):
 
     # Create an /etc/at.allow file and set permissions
     log.text("Creating an /etc/at.allow file...")
-    with open("/etc/at.allow", "x") as file:
-        file.write("")
-    log.done("Created a /etc/at.allow file!")
+    try:
+        with open("/etc/at.allow", "x") as file:
+            file.write("")
+        log.done("Created a /etc/at.allow file!")
+    except:
+        log.done("/etc/at.allow already exists!")
     
     log.text("Setting permissions on /etc/at.allow...")
     os.system("chmod g-wx,o-rwx /etc/at.allow")
@@ -963,6 +969,8 @@ def audit(log, CURR_DIR):
     log.text("Setting rules for auditd...")
     with open("/etc/audit/audit.rules", "w") as file:
         file.write(open(os.path.join(CURR_DIR, "config/audit.rules")).read())
+        os.system("cat /etc/audit/audit.rules")
+        pause()
 
     os.system("augenrules --load")
     os.system("service auditd restart")
