@@ -1335,9 +1335,15 @@ def gdm(log):
 
     # Setting GDM login banner message
     log.text("Configuring GDM login banner message...")
-    with open("/etc/dconf/db/gdm.d/01-banner-message", "w") as file:
-        file.write("[org/gnome/login-screen]\nbanner-message-enable=true\nbanner-message-text='This system is monitered 24/7 and any intrusions will be prosecuted to the full extent of the law.'")
-    log.done("Configured GDM login banner message!")
+    try:
+        with open("/etc/dconf/db/gdm.d/01-banner-message", "w") as file:
+            file.write("[org/gnome/login-screen]\nbanner-message-enable=true\nbanner-message-text='This system is monitered 24/7 and any intrusions will be prosecuted to the full extent of the law.'")
+        log.done("Configured GDM login banner message!")
+    except FileNotFoundError:
+        log.error("Banner message file doesn't exist!")
+    except:
+        log.error("Unknown error!")
+    
 
     # Disable user list on the login screen
     log.text("Disabling user list on the login screen...")
