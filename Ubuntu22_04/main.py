@@ -1029,138 +1029,139 @@ def audit(log, CURR_DIR):
 
 def ipRules(log):
     with open("/etc/ufw/sysctl.conf", "w") as file:
-        fileText = file.read()
+        with open("/etc/ufw/sysctl.conf", "w") as source:
+            fileText = source.read()
 
-        # Disable packet redirect sending
-        log.text("Disabling packet redirect sending...")
-        if "net.ipv4.conf.all.send_redirects=" in fileText:
-            re.sub(r"net.ipv4.conf.all.send_redirects=\d", "net.ipv4.conf.all.send_redirects=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.all.send_redirects=0"
-        
-        if "net.ipv4.conf.default.send_redirects=" in fileText:
-            re.sub(r"net.ipv4.conf.default.send_redirects=\d", "net.ipv4.conf.default.send_redirects=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.default.send_redirects=0"
-        log.done("Packet redirect sending disabled!")
+            # Disable packet redirect sending
+            log.text("Disabling packet redirect sending...")
+            if "net.ipv4.conf.all.send_redirects=" in fileText:
+                re.sub(r"net.ipv4.conf.all.send_redirects=\d", "net.ipv4.conf.all.send_redirects=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.all.send_redirects=0"
+            
+            if "net.ipv4.conf.default.send_redirects=" in fileText:
+                re.sub(r"net.ipv4.conf.default.send_redirects=\d", "net.ipv4.conf.default.send_redirects=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.default.send_redirects=0"
+            log.done("Packet redirect sending disabled!")
 
-        # Diable IP forwarding
-        log.text("Disabling IP forwarding...")
-        if "net.ipv4.ip_forward=" in fileText:
-            re.sub(r"net.ipv4.ip_forward=\d", "net.ipv4.ip_forward=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.ip_forward=0"
-        
-        if "net.ipv6.conf.all.forwarding=" in fileText:
-            re.sub(r"net.ipv6.conf.all.forwarding=\d", "net.ipv6.conf.all.forwarding=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv6.conf.all.forwarding=0"
+            # Diable IP forwarding
+            log.text("Disabling IP forwarding...")
+            if "net.ipv4.ip_forward=" in fileText:
+                re.sub(r"net.ipv4.ip_forward=\d", "net.ipv4.ip_forward=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.ip_forward=0"
+            
+            if "net.ipv6.conf.all.forwarding=" in fileText:
+                re.sub(r"net.ipv6.conf.all.forwarding=\d", "net.ipv6.conf.all.forwarding=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv6.conf.all.forwarding=0"
 
-        if "net.ipv4.conf.all.accept_source_route=" in fileText:
-            re.sub(r"net.ipv4.conf.all.accept_source_route=\d", "net.ipv4.conf.all.accept_source_route=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.all.accept_source_route=0"
-        log.done("Disabled IP forwarding!")
+            if "net.ipv4.conf.all.accept_source_route=" in fileText:
+                re.sub(r"net.ipv4.conf.all.accept_source_route=\d", "net.ipv4.conf.all.accept_source_route=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.all.accept_source_route=0"
+            log.done("Disabled IP forwarding!")
 
-        # Ensure source routed packets are not accepted
-        log.text("Ensuring source routed packets are not accepted...")
-        if "net.ipv4.conf.all.accept_source_route=" in fileText:
-            re.sub(r"net.ipv4.conf.all.accept_source_route=\d", "net.ipv4.conf.all.accept_source_route=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.all.accept_source_route=0"
-        
-        if "net.ipv4.conf.default.accept_source_route=" in fileText:
-            re.sub(r"net.ipv4.conf.default.accept_source_route=\d", "net.ipv4.conf.default.accept_source_route=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.default.accept_source_route=0"
-        
-        if "net.ipv6.conf.all.accept_source_route=" in fileText:
-            re.sub(r"net.ipv6.conf.all.accept_source_route=\d", "net.ipv6.conf.all.accept_source_route=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv6.conf.all.accept_source_route=0"
+            # Ensure source routed packets are not accepted
+            log.text("Ensuring source routed packets are not accepted...")
+            if "net.ipv4.conf.all.accept_source_route=" in fileText:
+                re.sub(r"net.ipv4.conf.all.accept_source_route=\d", "net.ipv4.conf.all.accept_source_route=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.all.accept_source_route=0"
+            
+            if "net.ipv4.conf.default.accept_source_route=" in fileText:
+                re.sub(r"net.ipv4.conf.default.accept_source_route=\d", "net.ipv4.conf.default.accept_source_route=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.default.accept_source_route=0"
+            
+            if "net.ipv6.conf.all.accept_source_route=" in fileText:
+                re.sub(r"net.ipv6.conf.all.accept_source_route=\d", "net.ipv6.conf.all.accept_source_route=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv6.conf.all.accept_source_route=0"
 
-        if "net.ipv6.conf.default.accept_source_route=" in fileText:
-            re.sub(r"net.ipv6.conf.default.accept_source_route=\d", "net.ipv6.conf.default.accept_source_route=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv6.conf.default.accept_source_route=0"
-        log.done("Ensured source routed packets are not accepted!")
+            if "net.ipv6.conf.default.accept_source_route=" in fileText:
+                re.sub(r"net.ipv6.conf.default.accept_source_route=\d", "net.ipv6.conf.default.accept_source_route=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv6.conf.default.accept_source_route=0"
+            log.done("Ensured source routed packets are not accepted!")
 
-        # Deny ICMP redirects
-        log.text("Denying ICMP redirects...")
-        if "net.ipv4.conf.default.secure_redirects=" in fileText:
-            re.sub(r"net.ipv4.conf.default.secure_redirects=\d", "net.ipv4.conf.default.secure_redirects=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.default.secure_redirects=0"
+            # Deny ICMP redirects
+            log.text("Denying ICMP redirects...")
+            if "net.ipv4.conf.default.secure_redirects=" in fileText:
+                re.sub(r"net.ipv4.conf.default.secure_redirects=\d", "net.ipv4.conf.default.secure_redirects=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.default.secure_redirects=0"
 
-        if "net.ipv4.conf.all.secure_redirects=" in fileText:
-            re.sub(r"net.ipv4.conf.all.secure_redirects=\d", "net.ipv4.conf.all.secure_redirects=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.all.secure_redirects=0"
-        log.done("ICMP redirects will be denied!")
+            if "net.ipv4.conf.all.secure_redirects=" in fileText:
+                re.sub(r"net.ipv4.conf.all.secure_redirects=\d", "net.ipv4.conf.all.secure_redirects=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.all.secure_redirects=0"
+            log.done("ICMP redirects will be denied!")
 
-        # Log suspicious packets
-        log.text("Logging suspicious packets...")
-        if "net.ipv4.conf.all.log_martians=" in fileText:
-            re.sub(r"net.ipv4.conf.all.log_martians=\d", "net.ipv4.conf.all.log_martians=1", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.all.log_martians=1"
+            # Log suspicious packets
+            log.text("Logging suspicious packets...")
+            if "net.ipv4.conf.all.log_martians=" in fileText:
+                re.sub(r"net.ipv4.conf.all.log_martians=\d", "net.ipv4.conf.all.log_martians=1", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.all.log_martians=1"
 
-        if "net.ipv4.conf.default.log_martians=" in fileText:
-            re.sub(r"net.ipv4.conf.default.log_martians=\d", "net.ipv4.conf.default.log_martians=1", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.default.log_martians=1"
-        log.done("Suspicious packets will be logged!")
+            if "net.ipv4.conf.default.log_martians=" in fileText:
+                re.sub(r"net.ipv4.conf.default.log_martians=\d", "net.ipv4.conf.default.log_martians=1", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.default.log_martians=1"
+            log.done("Suspicious packets will be logged!")
 
-        # Ignore broadcast ICMP requests
-        log.text("Ignoring broadcast ICMP requests...")
-        if "net.ipv4.icmp_echo_ignore_broadcasts=" in fileText:
-            re.sub(r"net.ipv4.icmp_echo_ignore_broadcasts=\d", "net.ipv4.icmp_echo_ignore_broadcasts=1", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.icmp_echo_ignore_broadcasts=1"
-        log.done("Broadcast ICMP requests will be ignored!")
+            # Ignore broadcast ICMP requests
+            log.text("Ignoring broadcast ICMP requests...")
+            if "net.ipv4.icmp_echo_ignore_broadcasts=" in fileText:
+                re.sub(r"net.ipv4.icmp_echo_ignore_broadcasts=\d", "net.ipv4.icmp_echo_ignore_broadcasts=1", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.icmp_echo_ignore_broadcasts=1"
+            log.done("Broadcast ICMP requests will be ignored!")
 
-        # Ignore bogus ICMP responses
-        log.text("Ignoring bogus ICMP responses...")
-        if "icmp_ignore_bogus_error_responses=" in fileText:
-            re.sub(r"icmp_ignore_bogus_error_responses=\d", "icmp_ignore_bogus_error_responses=1", fileText)
-        else:
-            fileText = fileText + "\nicmp_ignore_bogus_error_responses=1"
-        log.done("Bogus ICMP responses will be ignored!")
+            # Ignore bogus ICMP responses
+            log.text("Ignoring bogus ICMP responses...")
+            if "icmp_ignore_bogus_error_responses=" in fileText:
+                re.sub(r"icmp_ignore_bogus_error_responses=\d", "icmp_ignore_bogus_error_responses=1", fileText)
+            else:
+                fileText = fileText + "\nicmp_ignore_bogus_error_responses=1"
+            log.done("Bogus ICMP responses will be ignored!")
 
-        # Enabling Reverse Path Filtering
-        log.text("Enabling Reverse Path Filtering...")
-        if "net.ipv4.conf.all.rp_filter=" in fileText:
-            re.sub(r"net.ipv4.conf.all.rp_filter=\d", "net.ipv4.conf.all.rp_filter=1", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.all.rp_filter=1"
+            # Enabling Reverse Path Filtering
+            log.text("Enabling Reverse Path Filtering...")
+            if "net.ipv4.conf.all.rp_filter=" in fileText:
+                re.sub(r"net.ipv4.conf.all.rp_filter=\d", "net.ipv4.conf.all.rp_filter=1", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.all.rp_filter=1"
 
-        if "net.ipv4.conf.default.rp_filter=" in fileText:
-            re.sub(r"net.ipv4.conf.default.rp_filter=\d", "net.ipv4.conf.default.rp_filter=1", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.conf.default.rp_filter=1"
-        log.done("Reverse Path Filtering enabled!")
+            if "net.ipv4.conf.default.rp_filter=" in fileText:
+                re.sub(r"net.ipv4.conf.default.rp_filter=\d", "net.ipv4.conf.default.rp_filter=1", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.conf.default.rp_filter=1"
+            log.done("Reverse Path Filtering enabled!")
 
-        # Enable TCP SYN Cookies
-        log.text("Enabling TCP SYN Cookies...")
-        if "net.ipv4.tcp_syncookies=" in fileText:
-            re.sub(r"net.ipv4.tcp_syncookies=\d", "net.ipv4.tcp_syncookies=1", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv4.tcp_syncookies=1"
-        log.done("Enabled TCP SYN Cookies!")
+            # Enable TCP SYN Cookies
+            log.text("Enabling TCP SYN Cookies...")
+            if "net.ipv4.tcp_syncookies=" in fileText:
+                re.sub(r"net.ipv4.tcp_syncookies=\d", "net.ipv4.tcp_syncookies=1", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv4.tcp_syncookies=1"
+            log.done("Enabled TCP SYN Cookies!")
 
-        # Don't accept IPv6 router advertisements
-        log.text("Denying IPv6 router advertisements...")
-        if "net.ipv6.conf.all.accept_ra=" in fileText:
-            re.sub(r"net.ipv6.conf.all.accept_ra=\d", "net.ipv6.conf.all.accept_ra=1", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv6.conf.all.accept_ra=1"
+            # Don't accept IPv6 router advertisements
+            log.text("Denying IPv6 router advertisements...")
+            if "net.ipv6.conf.all.accept_ra=" in fileText:
+                re.sub(r"net.ipv6.conf.all.accept_ra=\d", "net.ipv6.conf.all.accept_ra=1", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv6.conf.all.accept_ra=1"
 
-        if "net.ipv6.conf.default.accept_ra=" in fileText:
-            re.sub(r"net.ipv6.conf.default.accept_ra=\d", "net.ipv6.conf.default.accept_ra=0", fileText)
-        else:
-            fileText = fileText + "\nnet.ipv6.conf.default.accept_ra=0"
-        file.write(fileText)
-        log.done("IPv6 router advertisements will be denied!")
+            if "net.ipv6.conf.default.accept_ra=" in fileText:
+                re.sub(r"net.ipv6.conf.default.accept_ra=\d", "net.ipv6.conf.default.accept_ra=0", fileText)
+            else:
+                fileText = fileText + "\nnet.ipv6.conf.default.accept_ra=0"
+            file.write(fileText)
+            log.done("IPv6 router advertisements will be denied!")
 
 # Disable uncommon network protocols
 def uncommonNetProtocols(log):
