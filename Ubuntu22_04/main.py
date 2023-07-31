@@ -960,59 +960,8 @@ def audit(log, CURR_DIR):
 
     # Set auditd rules
     log.text("Setting rules for auditd...")
-    with open("/etc/audit/rules.d/50-scope.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-scope.rules")).read())
-    
-    with open("/etc/audit/rules.d/50-user_emulation.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-user_emulation.rules")).read())
-
-    with open("/etc/audit/rules.d/50-sudo.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-sudo.rules")).read())
-    
-    with open("/etc/audit/rules.d/50-time-change.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-time-change.rules")).read())
-    
-    with open("/etc/audit/rules.d/50-system_local.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-system_local.rules")).read())
-    
-    with open("/etc/audit/rules.d/50-access.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-access.rules")).read())
-
-    with open("/etc/audit/rules.d/50-identity.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-identity.rules")).read())
-    
-    with open("/etc/audit/rules.d/50-perm_mod.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-perm_mod.rules")).read())
-    
-    with open("/etc/audit/rules.d/50-mounts.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-mounts.rules")).read())
-
-    with open("/etc/audit/rules.d/50-session.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-session.rules")).read())
-
-    with open("/etc/audit/rules.d/50-login.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-login.rules")).read())
-            
-    with open("/etc/audit/rules.d/50-delete.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-delete.rules")).read())
-
-    with open("/etc/audit/rules.d/50-MAC-policy.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-MAC-policy.rules")).read())
-
-    with open("/etc/audit/rules.d/50-perm_chng.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-perm_chng.rules")).read())
-
-    with open("/etc/audit/rules.d/50-priv_cmd.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-priv_cmd.rules")).read())
-
-    with open("/etc/audit/rules.d/50-usermod.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-usermod.rules")).read())
-
-    with open("/etc/audit/rules.d/50-kernel_modules.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/50-kernel_modules.rules")).read())
-
-    with open("/etc/audit/rules.d/99-finalize.rules", "w") as file:
-        file.write("-e 2")
+    with open("/etc/audit/audit.rules", "w") as file:
+        file.write(open(os.path.join(CURR_DIR, "config/audit.rules")).read())
 
     os.system("augenrules --load")
     log.done("Rules for auditd set!")
