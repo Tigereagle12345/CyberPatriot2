@@ -640,12 +640,16 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
     log.done("Hashing algorithm set to yescrypt")
 
     # Update user passwords
+    goodUsers = []
+    for user in USERS:
+        if user.pid > 999:
+            goodUsers.append(user.name)
     try:
-        USERNAMES.remove("root")
-        USERNAMES.remove("syslog")
+        goodUsers.remove("root")
+        goodUsers.remove("syslog")
     except:
         pass
-    for user in USERNAMES:
+    for user in goodUsers:
         if answer(f"Change password for {user} to the master password?", log):
             log.text(f"Changing {user}'s password...")
             process = pexpect.spawn(f"passwd {user}")
