@@ -965,6 +965,7 @@ def audit(log, CURR_DIR):
         file.write(open(os.path.join(CURR_DIR, "config/audit.rules")).read())
 
     os.system("augenrules --load")
+    os.system("service auditd restart")
     log.done("Rules for auditd set!")
 
     # Create a log file if one doesn't exist:

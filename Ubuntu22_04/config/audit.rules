@@ -1,0 +1,122 @@
+# First rule - delete all
+-D
+
+# Set backlog_wait_time to 60000
+--backlog_wait_time 60000
+
+# Rule 1: MAC-policy rule for /etc/apparmor/
+-w /etc/apparmor/ -p wa -k MAC-policy
+
+# Rule 2: MAC-policy-a rule for /etc/apparmor.d/
+-w /etc/apparmor.d/ -p wa -k MAC-policy-a
+
+# Rule 3: Access rule for 64-bit architecture with -EACCES
+-a always,exit -F arch=b64 -S creat,open,openat,truncate,ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=unset -k access
+
+# Rule 4: Access rule for 64-bit architecture with -EPERM
+-a always,exit -F arch=b64 -S creat,open,openat,truncate,ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=unset -k access
+
+# Rule 5: Access rule for 32-bit architecture with -EACCES
+-a always,exit -F arch=b32 -S creat,open,openat,truncate,ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=unset -k access
+
+# Rule 6: Access rule for 32-bit architecture with -EPERM
+-a always,exit -F arch=b32 -S creat,open,openat,truncate,ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=unset -k access
+
+# Rule 7: Key rule for 64-bit architecture - rename, unlink, unlinkat, renameat
+-a always,exit -F arch=b64 -S rename,unlink,unlinkat,renameat -F auid>=1000 -F auid!=unset -F key=delete
+
+# Rule 8: Key rule for 32-bit architecture - rename, unlink, unlinkat, renameat
+-a always,exit -F arch=b32 -S rename,unlink,unlinkat,renameat -F auid>=1000 -F auid!=unset -F key=delete
+
+# Rule 9: Identity rule for /etc/group
+-w /etc/group -p wa -k identity
+
+# Rule 10: Identity rule for /etc/passwd
+-w /etc/passwd -p wa -k identity
+
+# Rule 11: Identity rule for /etc/gshadow
+-w /etc/gshadow -p wa -k identity
+
+# Rule 12: Identity rule for /etc/shadow
+-w /etc/shadow -p wa -k identity
+
+# Rule 13: Identity rule for /etc/security/opasswd
+-w /etc/security/opasswd -p wa -k identity
+
+# Rule 14: Kernel_modules rule
+-a always,exit -F arch=b64 -S init_module,finit_module,delete_module,create_module,query_module -F auid>=1000 -F auid!=unset -k kernel_modules
+
+# Rule 15: Kernel_modules rule for /usr/bin/kmod
+-a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>=1000 -F auid!=unset -k kernel_modules
+
+# Rule 16: Logins rule for /var/log/lastlog
+-w /var/log/lastlog -p wa -k logins
+
+# Rule 17: Logins rule for /var/run/faillock
+-w /var/run/faillock -p wa -k logins
+
+# Rule 18: Mounts rule for 32-bit architecture
+-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=unset -k mounts
+
+# Rule 19: Mounts rule for 64-bit architecture
+-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=unset -k mounts
+
+# Rule 20: perm_chng rule for /usr/bin/setfacl
+-a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
+
+# Rule 21: scope rule for /etc/sudoers
+-w /etc/sudoers -p wa -k scope
+
+# Rule 22: scope rule for /etc/sudoers.d
+-w /etc/sudoers.d -p wa -k scope
+
+# Rule 23: session rule for /var/run/utmp
+-w /var/run/utmp -p wa -k session
+
+# Rule 24: session rule for /var/log/wtmp
+-w /var/log/wtmp -p wa -k session
+
+# Rule 25: session rule for /var/log/btmp
+-w /var/log/btmp -p wa -k session
+
+# Rule 26: sudo_log_file rule for /var/log/sudo.log
+-w /var/log/sudo.log -p wa -k sudo_log_file
+
+# Rule 27: system-locale rule for sethostname, setdomainname
+-a always,exit -F arch=b64 -S sethostname,setdomainname -k system-locale
+
+# Rule 28: system-locale rule for sethostname, setdomainname for 32-bit architecture
+-a always,exit -F arch=b32 -S sethostname,setdomainname -k system-locale
+
+# Rule 29: time-change rule for adjtimex, settimeofday, clock_settime
+-a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time-change
+
+# Rule 30: time-change rule for adjtimex, settimeofday, clock_settime for 32-bit architecture
+-a always,exit -F arch=b32 -S adjtimex,settimeofday,clock_settime -k time-change
+
+# Rule 31: usermod rule for /usr/sbin/usermod
+-a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=1000 -F auid!=unset -k usermod
+
+# Rule 32: user_emulation rule for execve
+-a always,exit -F arch=b64 -C euid!=uid -F auid!=unset -S execve -k user_emulation
+
+# Rule 33: user_emulation rule for execve for 32-bit architecture
+-a always,exit -F arch=b32 -C euid!=uid -F auid!=unset -S execve -k user_emulation
+
+# perm_mod rule for 64-bit architecture with chmod, fchmod, fchmodat
+-a always,exit -F arch=b64 -S chmod,fchmod,fchmodat -F auid>=1000 -F auid!=unset -F key=perm_mod
+
+# perm_mod rule for 64-bit architecture with chown, fchown, lchown, fchownat
+-a always,exit -F arch=b64 -S chown,fchown,lchown,fchownat -F auid>=1000 -F auid!=unset -F key=perm_mod
+
+# perm_mod rule for 32-bit architecture with chmod, fchmod, fchmodat
+-a always,exit -F arch=b32 -S chmod,fchmod,fchmodat -F auid>=1000 -F auid!=unset -F key=perm_mod
+
+# perm_mod rule for 32-bit architecture with chown, fchown, lchown, fchownat
+-a always,exit -F arch=b32 -S lchown,fchown,chown,fchownat -F auid>=1000 -F auid!=unset -F key=perm_mod
+
+# perm_mod rule for 64-bit architecture with setxattr, lsetxattr, fsetxattr, removexattr, lremovexattr, fremovexattr
+-a always,exit -F arch=b64 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>=1000 -F auid!=unset -F key=perm_mod
+
+# perm_mod rule for 32-bit architecture with setxattr, lsetxattr, fsetxattr, removexattr, lremovexattr, fremovexattr
+-a always,exit -F arch=b32 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>=1000 -F auid!=unset -F key=perm_mod
