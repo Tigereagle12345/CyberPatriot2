@@ -1333,28 +1333,21 @@ def gdm(log):
         file.write("user-db:user\nsystem-db:gdm\nfile-db:/usr/share/gdm/greeter-dconf-defaults")
     log.done("Configured GDM login profile settings!")
 
+    # Create a gdm.d directory if it exists
+    if not os.path.exists("/etc/dconf/db/gdm.d/"):
+        os.mkdir("/etc/dconf/db/gdm.d/")
+
     # Setting GDM login banner message
     log.text("Configuring GDM login banner message...")
-    try:
-        with open("/etc/dconf/db/gdm.d/01-banner-message", "w") as file:
-            file.write("[org/gnome/login-screen]\nbanner-message-enable=true\nbanner-message-text='This system is monitered 24/7 and any intrusions will be prosecuted to the full extent of the law.'")
-        log.done("Configured GDM login banner message!")
-    except FileNotFoundError:
-        log.error("Banner message file doesn't exist!")
-    except Exception as e:
-        log.error(f"An error occurred: {str(e)}")
-    
+    with open("/etc/dconf/db/gdm.d/01-banner-message", "w") as file:
+        file.write("[org/gnome/login-screen]\nbanner-message-enable=true\nbanner-message-text='This system is monitered 24/7 and any intrusions will be prosecuted to the full extent of the law.'")
+    log.done("Configured GDM login banner message!")
 
     # Disable user list on the login screen
-    try:
-        log.text("Disabling user list on the login screen...")
-        with open("/etc/dconf/db/gdm.d/00-login-screen", "w") as file:
-            file.write("[org/gnome/login-screen]\ndisable-user-list=true\n")
-        log.done("Disabled user list on the login screen!")
-    except FileNotFoundError:
-        log.error("User list file doesn't exist!")
-    except Exception as e:
-        log.error(f"An error occurred: {str(e)}")
+    log.text("Disabling user list on the login screen...")
+    with open("/etc/dconf/db/gdm.d/00-login-screen", "w") as file:
+        file.write("[org/gnome/login-screen]\ndisable-user-list=true\n")
+    log.done("Disabled user list on the login screen!")
 
 
     # Force the screen to lock when the user is idle
@@ -1362,6 +1355,7 @@ def gdm(log):
     with open("/etc/dconf/profile/user", "w") as file:
         file.write("user-db:user\nsystem-db:local")
 
+    # Create a local.d directory if it exists
     if not os.path.exists("/etc/dconf/db/local.d/"):
         os.mkdir("/etc/dconf/db/local.d/")
     
