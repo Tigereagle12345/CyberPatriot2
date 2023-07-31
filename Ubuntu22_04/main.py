@@ -888,7 +888,8 @@ def cron(log):
 
     # Delete the /etc/cron.deny file
     log.text("Deleting the /etc/cron.deny file...")
-    os.remove("/etc/cron.deny")
+    if os.path.isfile("/etc/cron.deny"):
+        os.remove("/etc/cron.deny")
     log.done("Deleted the /etc/cron.deny file!")
 
     # Create an /etc/cron.allow file and set permissions
@@ -965,6 +966,15 @@ def audit(log, CURR_DIR):
 
     os.system("augenrules --load")
     log.done("Rules for auditd set!")
+
+    # Create a log file if one doesn't exist:
+    log.text("Confirming /var/log/sudo.log exists...")
+    try:
+        with open("/var/log/sudo.log", "x") as file:
+            file.write("")
+        log.done("Created the /var/log/sudo.log file!")
+    except:
+        log.done("/var/log/sudo.log already exists!")
 
     # Set permissions on log files to 640
     log.text("Setting permissions on log files to 640...")
