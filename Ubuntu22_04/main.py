@@ -1029,7 +1029,7 @@ def audit(log, CURR_DIR):
 
 def ipRules(log):
     with open("/etc/ufw/sysctl.conf", "w") as file:
-        with open("/etc/ufw/sysctl.conf", "w") as source:
+        with open("/etc/ufw/sysctl.conf", "r") as source:
             fileText = source.read()
 
             # Disable packet redirect sending
