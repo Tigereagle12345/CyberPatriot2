@@ -1346,10 +1346,15 @@ def gdm(log):
     
 
     # Disable user list on the login screen
-    log.text("Disabling user list on the login screen...")
-    with open("/etc/dconf/db/gdm.d/00-login-screen", "w") as file:
-        file.write("[org/gnome/login-screen]\ndisable-user-list=true")
-    log.done("Disabled user list on the login screen!")
+    try:
+        log.text("Disabling user list on the login screen...")
+        with open("/etc/dconf/db/gdm.d/00-login-screen", "w") as file:
+            file.write("[org/gnome/login-screen]\ndisable-user-list=true")
+        log.done("Disabled user list on the login screen!")
+    except FileNotFoundError:
+        log.error("User list file doesn't exist!")
+    except:
+        log.error("Unknown error!")
 
     # Force the screen to lock when the user is idle
     log.text("Forcing the screen to lock when the user is idle..")
