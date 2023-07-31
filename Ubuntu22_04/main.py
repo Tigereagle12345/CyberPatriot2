@@ -935,27 +935,28 @@ def audit(log, CURR_DIR):
     # Configure auditd
     log.text("Configuring auditd...")
     with open("/etc/audit/auditd.conf", "w") as file:
-        fileText = file.read()
+        with open("/etc/audit/auditd.conf", "r") as source:
+            fileText = source.read()
 
-        # Set max size for log files
-        log.text("Setting max size for log files...")
-        if "max_log_file=" in fileText:
-            re.sub(r"max_log_file=\d", "max_log_file=10")
-        else:
-            fileText = fileText + "\nmax_log_file=10"
-        log.done("Max size for log files set to 10MB!")
+            # Set max size for log files
+            log.text("Setting max size for log files...")
+            if "max_log_file=" in fileText:
+                re.sub(r"max_log_file=\d", "max_log_file=10")
+            else:
+                fileText = fileText + "\nmax_log_file=10"
+            log.done("Max size for log files set to 10MB!")
 
-        # Ensure logs are not automatically deleted
-        log.text("Ensuring logs are not automatically deleted...")
-        fileText = fileText + "\nmax_log_file_action = keep_logs"
-        log.done("Logs will not be automatically deleted!")
+            # Ensure logs are not automatically deleted
+            log.text("Ensuring logs are not automatically deleted...")
+            fileText = fileText + "\nmax_log_file_action = keep_logs"
+            log.done("Logs will not be automatically deleted!")
 
-        # Ensure auditd stops the system when log files are full
-        log.text("Ensuring auditd stops the system when log files are full...")
-        fileText = fileText + "\nspace_left_action = email\naction_mail_acct = root\nadmin_space_left_action = halt"
-        log.done("Auditd will stop the system when log files are full!")
+            # Ensure auditd stops the system when log files are full
+            log.text("Ensuring auditd stops the system when log files are full...")
+            fileText = fileText + "\nspace_left_action = email\naction_mail_acct = root\nadmin_space_left_action = halt"
+            log.done("Auditd will stop the system when log files are full!")
 
-        file.write(fileText)
+            file.write(fileText)
 
     # Set auditd rules
     log.text("Setting rules for auditd...")
