@@ -1341,20 +1341,21 @@ def gdm(log):
         log.done("Configured GDM login banner message!")
     except FileNotFoundError:
         log.error("Banner message file doesn't exist!")
-    except:
-        log.error("Unknown error!")
+    except Exception as e:
+        log.error(f"An error occurred: {str(e)}")
     
 
     # Disable user list on the login screen
     try:
         log.text("Disabling user list on the login screen...")
         with open("/etc/dconf/db/gdm.d/00-login-screen", "w") as file:
-            file.write("[org/gnome/login-screen]\ndisable-user-list=true")
+            file.write("[org/gnome/login-screen]\ndisable-user-list=true\n")
         log.done("Disabled user list on the login screen!")
     except FileNotFoundError:
         log.error("User list file doesn't exist!")
-    except:
-        log.error("Unknown error!")
+    except Exception as e:
+        log.error(f"An error occurred: {str(e)}")
+
 
     # Force the screen to lock when the user is idle
     log.text("Forcing the screen to lock when the user is idle..")
