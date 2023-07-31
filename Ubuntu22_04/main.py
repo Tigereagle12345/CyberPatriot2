@@ -649,6 +649,8 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
         goodUsers.remove("syslog")
     except:
         pass
+    log.error(goodUsers)
+    pause(log)
     for user in goodUsers:
         if answer(f"Change password for {user} to the master password?", log):
             log.text(f"Changing {user}'s password...")
@@ -725,13 +727,14 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
     # Remove all users from the shadow groups
     log.text("Removing users from the shadow group...")
     with open("/etc/group", "w") as file:
-        textList = file.read()
-        text = ""
-        for group in textList:
-            if "shadow:x:" in group:
-                group = "shadow:x:42:"
-            text = "\n"+group
-        file.write(text)
+        with open("/etc/group", "r") as source:
+            textList = source.read()
+            text = ""
+            for group in textList:
+                if "shadow:x:" in group:
+                    group = "shadow:x:42:"
+                text = "\n"+group
+            file.write(text)
     log.done("Removed all users from the shadow group!")
 
 def ssh(log):
