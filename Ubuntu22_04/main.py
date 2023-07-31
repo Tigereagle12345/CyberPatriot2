@@ -1661,7 +1661,7 @@ def ufw(log):
 # Find Unauthorizerd Users
 def authUsers(log, USERS, USERFILE, OSTYPE):
     with open(USERFILE, "r") as file:
-        users = file.read()
+        users = file.read().split("\n")
         goodUsers = []
         for user in users:
             goodUsers.append(user.replace("\n", ""))
