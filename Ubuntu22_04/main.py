@@ -908,7 +908,8 @@ def cron(log):
 
     # Delete the /etc/at.deny file
     log.text("Deleting the /etc/at.deny file...")
-    os.remove("/etc/at.deny")
+    if os.path.isfile("/etc/at.deny"):
+        os.remove("/etc/at.deny")
     log.done("Deleted the /etc/at.deny file!")
 
     # Create an /etc/at.allow file and set permissions
