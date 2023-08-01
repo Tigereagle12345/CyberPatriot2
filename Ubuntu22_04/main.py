@@ -145,19 +145,19 @@ def pause(log):
     log.answer("Press anything to continue: ")
     cont = input(" ")
 
-def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD):
+def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER):
     WINDOWS = OSTYPE[0]
     LINUX = OSTYPE[1]
     if LINUX:
         log.head("Starting Ubuntu Script...")
-        ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD)
+        ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER)
     elif WINDOWS:
         sys.exit(log.error("Windows is not currently supported!"))
     else:
         if answer("OS Unknown, Continue with Ubuntu?", log):
             OSTYPE[1] = True
             if os.getuid() == 0:
-                ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD)
+                ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER)
             else:
                 sys.exit(log.error("This Script Requires Root Priveledges!"))
         else:
@@ -166,7 +166,7 @@ def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MAS
 #----- UBUNTU 22.04 -----
 
 # Start Script for Ubuntu
-def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD):
+def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER):
     # Configure dpkg
     os.system("dpkg --configure -a")
 
@@ -226,7 +226,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Automounting disabled!")
 
     # Install and configure AIDE
-    aide(log, CURR_DIR)
+    aide(log, CURR_DIR, CURR_USER)
 
     # Set bootloader password
     bootloaderPass(log, MASTER_PASSWORD, CURR_DIR)
@@ -1548,7 +1548,7 @@ def bootloaderPass(log, MASTER_PASSWORD, CURR_DIR):
     log.done("Permissions for /etc/grub/grub.cfg set!")
 
 # Install and configure AIDE
-def aide(log, CURR_DIR):
+def aide(log, CURR_DIR, CURR_USER):
     # Install AIDE
     log.text("Installing AIDE...")
     os.system("apt install aide aide-common -y")
@@ -1569,7 +1569,13 @@ def aide(log, CURR_DIR):
 
     # Schedule a cron job to run AIDE
     log.text("Scheduling a cron job to run AIDE...")
-    cron = CronTab(tab="0 5 * * * /usr/bin/aide.wrapper --config /etc/aide/aide.conf --check")
+    # Initialize cron
+    cron = CronTab(user=CURR_USER)
+    # Create cron job
+    job = cron.new(command="/usr/bin/aide.wrapper --config /etc/aide/aide.conf --check")
+    # Schedule cron job
+    job.hour.every(5)
+    # Write cron job
     cron.write()
     
 
@@ -1781,4 +1787,4 @@ def authAdmins(log, ADMINFILE, OSTYPE):
                     log.text(f"Proceeding without removing '{admin}' from the sudo group.")
 
 # Run the main file
-mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD)
+mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER)
