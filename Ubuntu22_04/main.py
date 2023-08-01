@@ -126,7 +126,8 @@ try:
                 lineInfo = line.split(":")
                 USERS.append(User(lineInfo[0], lineInfo[2], lineInfo[3], lineInfo[5], lineInfo[6]))
         USERNAMES = [user.name for user in USERS]
-except:
+except Exception as e:
+    log.error(f"Error: {e}")
     sys.exit(log.error("Couldn't extract user accounts! Aborting..."))
 
 MASTER_PASSWORD = "mT80F0!t07zCg@D#"
