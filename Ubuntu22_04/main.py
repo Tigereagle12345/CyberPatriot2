@@ -3,7 +3,6 @@ import argparse
 import sys
 import platform
 import subprocess
-import psutil
 from crontab import CronTab
 import pexpect
 import re
@@ -68,6 +67,13 @@ class Log():
             self.level == 0
             log.error("Please provide a logging level!\nOptions:\n-'done'\n-'text'\n-'head'\n-'warn'\n-'error'")
 
+class User():
+    def __init__(self, name, uid, gid, home_dir, shell):
+        self.name = name
+        self.uid = uid
+        self.gid = gid
+        self.home_dir = home_dir
+        self.shell = shell
 #----- End Of Classes -----
 
 # ----- System Variables -----
@@ -113,10 +119,15 @@ else:
     ADMINFILE = os.path.join(CURR_DIR, "resources/admins.txt")
 
 try:
-    USERS = psutil.users()
-    USERNAMES = [user.name for user in USERS]
+    if LINUX:
+        USERS = []
+        with open("/etc/passwd", "r") as file:
+            for line in file.read():
+                lineInfo = line.split(":")
+                USERS.append(User(lineInfo[0], lineInfo[2], lineInfo[3], lineInfo[5], lineInfo[6]))
+        USERNAMES = [user.name for user in USERS]
 except:
-    USERS, USERNAMES = False
+    sys.exit(log.error("Couldn't extract user accounts! Aborting..."))
 
 MASTER_PASSWORD = "mT80F0!t07zCg@D#"
 
@@ -335,7 +346,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
 
     # Ensure all users have a home directory
     for user in USERS:
-        if user.pid > 999:
+        if user.uid > 999:
             if not os.path.isdir(f"/home/{user.name}"):
                 log.text(f"Creating a home directory for {user.name}...")
                 os.mkdir(f"/home/{user.name}")
@@ -423,7 +434,7 @@ def firefox(log, USERS, CURR_DIR):
     
     profiles = []
     for user in USERS:
-        if user.pid > 999:
+        if user.uid > 999:
             if os.path.isdir(f"/home/{user.name}"):
                 if os.path.isfile(f"/home/{user.name}/snap/firefox/common/.mozilla/firefox/profiles.ini"):
                     for line in open(f"/home/{user.name}/snap/firefox/common/.mozilla/firefox/profiles.ini", "r").read():
@@ -456,7 +467,7 @@ def userMng(log, USERNAMES, USERS, MASTER_PASSWORD):
 def addUser(log, USERNAMES, USERS, MASTER_PASSWORD):
     log.warn("Users: ")
     for user in USERS:
-        if user.pid > 999:
+        if user.uid > 999:
             log.warn(user.name)
     if answer("Add a new user?", log):
         name = input(log.warn("Type new username: "))
@@ -476,7 +487,7 @@ def addUser(log, USERNAMES, USERS, MASTER_PASSWORD):
 def delUser(log, USERNAMES):
     log.warn("Users: ")
     for user in USERS:
-        if user.pid > 999:
+        if user.uid > 999:
             log.warn(user.name)
     if answer("Delete a user?", log):
         name = input(log.warn("Type user to delete: "))
@@ -538,7 +549,7 @@ def delGroup(log, GROUPS):
 def modGroupMem(log, GROUPS, USERS):
     normUsers = []
     for user in USERS:
-        if user.pid > 999:
+        if user.uid > 999:
             normUsers.append(user.name)
 
     log.warn("Groups: ")
@@ -594,7 +605,7 @@ def permissions(log):
         log.done(f"Set permissions on {file}!")
     
     for user in USERS:
-        if user.pid > 999:
+        if user.uid > 999:
             if os.path.isdir(f"/home/{user.name}"):
                 os.system(f"chmod g-w,o-rwx /home/{user.name}")
 
@@ -642,7 +653,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
     # Update user passwords
     goodUsers = []
     for user in USERS:
-        if user.pid > 999:
+        if user.uid > 999:
             goodUsers.append(user.name)
     try:
         goodUsers.remove("root")
@@ -694,7 +705,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
     # Ensure system accounts are secured
     SYSUSERS = []
     for user in USERS:
-        if user.pid < 1000:
+        if user.uid < 1000:
             SYSUSERS.append(user.name)
     for user in ["root", "sync", "shutdown", "halt"]:
         try:
@@ -1717,7 +1728,7 @@ def authUsers(log, USERS, USERFILE, OSTYPE):
     log.error(goodUsers)
     for user in USERS:
         log.error(user)
-        if user.pid > 999:
+        if user.uid > 999:
             users.append(user.name)
     log.error(users)
     for user in users:
