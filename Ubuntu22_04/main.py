@@ -124,6 +124,7 @@ try:
         with open("/etc/passwd", "r") as file:
             for line in file.read():
                 lineInfo = line.split(":")
+                log.error(lineInfo)
                 USERS.append(User(lineInfo[0], lineInfo[2], lineInfo[3], lineInfo[5], lineInfo[6]))
         USERNAMES = [user.name for user in USERS]
 except Exception as e:
