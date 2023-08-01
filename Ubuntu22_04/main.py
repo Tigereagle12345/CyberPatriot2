@@ -1711,11 +1711,12 @@ def authUsers(log, USERS, USERFILE, OSTYPE):
         goodUsers = []
         for user in users:
             if not user == "\n" or user == "":
-                goodUsers.append(user.replace("\n", ""))
+                goodUsers.append(user)
     goodUsers.append("root")
     users = []
     log.error(goodUsers)
     for user in USERS:
+        log.error(user)
         if user.pid > 999:
             users.append(user.name)
     log.error(users)
