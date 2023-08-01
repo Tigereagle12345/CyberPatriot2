@@ -70,8 +70,8 @@ class Log():
 class User():
     def __init__(self, name, uid, gid, home_dir, shell):
         self.name = name
-        self.uid = uid
-        self.gid = gid
+        self.uid = int(uid)
+        self.gid = int(gid)
         self.home_dir = home_dir
         self.shell = shell
 #----- End Of Classes -----
@@ -124,7 +124,6 @@ try:
         with open("/etc/passwd", "r") as file:
             for line in file.readlines():
                 lineInfo = line.split(":")
-                log.error(lineInfo)
                 USERS.append(User(lineInfo[0], lineInfo[2], lineInfo[3], lineInfo[5], lineInfo[6].replace("\n", "")))
         USERNAMES = [user.name for user in USERS]
 except Exception as e:
@@ -1723,13 +1722,12 @@ def authUsers(log, USERS, USERFILE, OSTYPE):
         users = file.read().split("\n")
         goodUsers = []
         for user in users:
-            if not user == "\n" or user == "":
-                goodUsers.append(user)
+            goodUsers.append(user)
     goodUsers.append("root")
+    goodUsers = [item for item in goodUsers if item != "" or item != "\n"]
     users = []
     log.error(goodUsers)
     for user in USERS:
-        log.error(user)
         if user.uid > 999:
             users.append(user.name)
     log.error(users)
