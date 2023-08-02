@@ -130,6 +130,18 @@ except Exception as e:
     log.error(f"Error: {e}")
     sys.exit(log.error("Couldn't extract user accounts! Aborting..."))
 
+SYSUSERS = []
+NORMUSERS = []
+
+for user in USERS:
+    if user.uid < 999:
+        SYSUSERS.append(user)
+    else:
+        if user.shell == "/sbin/nologin":
+            SYSUSERS.append(user)
+        else:
+            NORMUSERS.append(user)
+
 MASTER_PASSWORD = "mT80F0!t07zCg@D#"
 
 CURR_USER = os.getlogin()
@@ -157,19 +169,19 @@ def pause(log):
     log.answer("Press anything to continue: ")
     cont = input(" ")
 
-def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER):
+def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER, SYSUSERS, NORMUSERS):
     WINDOWS = OSTYPE[0]
     LINUX = OSTYPE[1]
     if LINUX:
         log.head("Starting Ubuntu Script...")
-        ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER)
+        ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER, SYSUSERS, NORMUSERS)
     elif WINDOWS:
         sys.exit(log.error("Windows is not currently supported!"))
     else:
         if answer("OS Unknown, Continue with Ubuntu?", log):
             OSTYPE[1] = True
             if os.getuid() == 0:
-                ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER)
+                ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER, SYSUSERS, NORMUSERS)
             else:
                 sys.exit(log.error("This Script Requires Root Priveledges!"))
         else:
@@ -178,7 +190,7 @@ def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MAS
 #----- UBUNTU 22.04 -----
 
 # Start Script for Ubuntu
-def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER):
+def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER, SYSUSERS, NORMUSERS):
     # Configure dpkg
     os.system("dpkg --configure -a")
 
@@ -216,7 +228,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     installDep(log)
 
     # Authenticate users and user permissions
-    authUsers(log, USERS, USERFILE, OSTYPE)
+    authUsers(log, NORMUSERS, USERFILE, OSTYPE)
     authAdmins(log, ADMINFILE, OSTYPE)
 
     # Enable and setup firewall
@@ -332,7 +344,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Su command disabled!")
 
     # Configure password settings
-    passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD)
+    passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS)
 
     # Find unowned files
     log.text("Finding unowned files...")
@@ -346,49 +358,49 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     pause(log)
 
     # Ensure all users have a home directory
-    for user in USERS:
-        if user.uid > 999:
-            if not os.path.isdir(f"/home/{user.name}"):
-                log.text(f"Creating a home directory for {user.name}...")
-                os.mkdir(f"/home/{user.name}")
-                log.done(f"Created a home directory for {user.name}!")
+    for user in NORMUSERS:
+        if not os.path.isdir(user.home_dir):
+            log.text(f"Creating a home directory for {user.name}...")
+            os.mkdir(f"/home/{user.name}")
+            user.home_dir = f"/home/{user.name}"
+            log.done(f"Created a home directory for {user.name}!")
 
     # Set permissions on files
-    permissions(log)
+    permissions(log, NORMUSERS)
 
     # Remove unauthorized .netrc, .forward, .rhost files
     log.text("Removing unauthorized .netrc, .forward and .rhost files...")
-    for user in USERNAMES:
-        if os.path.isdir(f"/home/{user}"):
+    for user in NORMUSERS:
+        if os.path.isdir(user.home_dir):
             # .netrc
-            if os.path.exists(f"/home/{user}/.netrc"):
-                if answer(f"Should /home/{user}/.netrc exist?"):
-                    os.system(f"chmod 600 /home/{user}/.netrc")
+            if os.path.exists(os.path.join(user.home_dir, ".netrc")):
+                if answer(f"Should {user.home_dir}/.netrc exist?"):
+                    os.system(f"chmod 600 {os.path.join(user.home_dir, '.netrc')}")
                 else:
-                    os.remove(f"/home/{user}/.netrc")
+                    os.remove({os.path.join(user.home_dir, ".netrc")})
             # .forward
-            if os.path.exists(f"/home/{user}/.forward"):
-                if answer(f"Should /home/{user}/.forward exist?"):
-                    os.system(f"chmod 600 /home/{user}/.forward")
+            if os.path.exists(os.path.join(user.home_dir, ".forward")):
+                if answer(f"Should {user.home_dir}/.forward exist?"):
+                    os.system(f"chmod 600 {os.path.join(user.home_dir, '.forward')}")
                 else:
-                    os.remove(f"/home/{user}/.forward")
+                    os.remove(os.path.join(user.home_dir, ".forward"))
             # .rhost
-            if os.path.exists(f"/home/{user}/.rhost"):
-                if answer(f"Should /home/{user}/.rhost exist?"):
-                    os.system(f"chmod 600 /home/{user}/.rhost")
+            if os.path.exists(os.path.join(user.home_dir, ".rhost")):
+                if answer(f"Should {user.home_dir}/.rhost exist?"):
+                    os.system(f"chmod 600 {os.path.join(user.home_dir, '.rhost')}")
                 else:
-                    os.remove(f"/home/{user}/.rhost")
+                    os.remove(os.path.join(user.home_dir, ".rhost"))
     log.done("Removed unauthorized .netrc, .forward and .rhost files!")
     
     # Manage users
-    userMng(log, USERNAMES, USERS)
+    userMng(log, USERNAMES, USERS, NORMUSERS)
     
     # Manage groups
-    groupMng(log, USERS)
+    groupMng(log, USERS, NORMUSERS)
 
     # Confgure Firefox settings
     if answer("Is firefox installed?", log):
-        firefox(log, USERS, CURR_DIR)
+        firefox(log, NORMUSERS, CURR_DIR)
 
     # Remove excess packages
     log.text("Removing excess packages...")
@@ -402,7 +414,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
 
 # ----- Functions -----
 # Confgure Firefox settings
-def firefox(log, USERS, CURR_DIR):
+def firefox(log, NORMUSERS, CURR_DIR):
     log.text("Updating firefox...")
     os.system("apt update -y")
     log.done("Done!")
@@ -434,13 +446,12 @@ def firefox(log, USERS, CURR_DIR):
         loc = "/usr/lib/firefox/"
     
     profiles = []
-    for user in USERS:
-        if user.uid > 999:
-            if os.path.isdir(f"/home/{user.name}"):
-                if os.path.isfile(f"/home/{user.name}/snap/firefox/common/.mozilla/firefox/profiles.ini"):
-                    for line in open(f"/home/{user.name}/snap/firefox/common/.mozilla/firefox/profiles.ini", "r").read():
-                        if "Path=" in line:
-                            profiles.append(os.path.join(f"/home/{user.name}/snap/firefox/common/.mozilla/firefox/", line.replace("Path=", "", 1)))
+    for user in NORMUSERS:
+        if os.path.isdir(user.home_dir):
+            if os.path.isfile(os.path.join(user.home_dir, "snap/firefox/common/.mozilla/firefox/profiles.ini")):
+                for line in open(os.path.join(user.home_dir, "snap/firefox/common/.mozilla/firefox/profiles.ini"), "r").read():
+                    if "Path=" in line:
+                        profiles.append(os.path.join(user.home_dir, "snap/firefox/common/.mozilla/firefox/", line.replace("Path=", "", 1)))
 
     for profile in profiles:
         with open(os.path.join(CURR_DIR, "config/user.js")) as source:
@@ -460,21 +471,20 @@ def firefox(log, USERS, CURR_DIR):
             file.write(source.read())
 
 # Manage users
-def userMng(log, USERNAMES, USERS, MASTER_PASSWORD):
-    addUser(log, USERNAMES, USERS, MASTER_PASSWORD)
-    delUser(log, USERNAMES)
+def userMng(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS):
+    addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
+    delUser(log, USERS, NORMUSERS)
 
 # Add Users
-def addUser(log, USERNAMES, USERS, MASTER_PASSWORD):
+def addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS):
     log.warn("Users: ")
-    for user in USERS:
-        if user.uid > 999:
-            log.warn(user.name)
+    for user in NORMUSERS:
+        log.warn(user.name)
     if answer("Add a new user?", log):
         name = input(log.warn("Type new username: "))
         if name in USERNAMES:
             log.error("Username already taken!")
-            addUser(log, USERNAMES, USERS, MASTER_PASSWORD)
+            addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
         else:
             os.system(f"useradd -m {name}")
             process = pexpect.spawn(f"passwd {name}")
@@ -483,29 +493,28 @@ def addUser(log, USERNAMES, USERS, MASTER_PASSWORD):
             process.expect("Retype new password: ")
             process.sendline(MASTER_PASSWORD)
             log.done(f"Added new user {name}!")
-            addUser(log, USERNAMES, USERS, MASTER_PASSWORD)
+            addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
 
-def delUser(log, USERNAMES):
+def delUser(log, USERS, NORMUSERS):
     log.warn("Users: ")
-    for user in USERS:
-        if user.uid > 999:
+    for user in NORMUSERS:
             log.warn(user.name)
     if answer("Delete a user?", log):
-        name = input(log.warn("Type user to delete: "))
-        if name in USERNAMES:
-            os.system(f"deluser {name}")
+        user = input(log.warn("Type user to delete: "))
+        if user in USERS:
+            os.system(f"deluser {user.name}")
             log.done(f"{user} deleted!")
             if answer("Delete home directory?", log):
-                os.remove(f"/home/{name}")
+                os.remove(user.home_dir)
                 log.done("Home directory deleted!")
-            delUser(log, USERNAMES)
+            delUser(log, USERS, NORMUSERS)
         else:
             log.error("User does not exist!")
-            addUser(log, USERNAMES)
+            addUser(log, USERS, NORMUSERS)
         
 
 # Manage groups
-def groupMng(log, USERS):
+def groupMng(log, USERS, NORMUSERS):
     GROUPS = {}
     with open("/etc/group", "r") as file:
         for line in file.read():
@@ -513,7 +522,7 @@ def groupMng(log, USERS):
             GROUPS[line.split(":")[0]]["Users"] = line.split(":")[3]
     addGroup(log, GROUPS)
     delGroup(log, GROUPS)
-    modGroupMem(log, GROUPS, USERS)
+    modGroupMem(log, GROUPS, USERS, NORMUSERS)
 
 
 # Add groups
@@ -547,12 +556,7 @@ def delGroup(log, GROUPS):
             addGroup(log, GROUPS)
 
 # Modify group membership
-def modGroupMem(log, GROUPS, USERS):
-    normUsers = []
-    for user in USERS:
-        if user.uid > 999:
-            normUsers.append(user.name)
-
+def modGroupMem(log, GROUPS, USERS, NORMUSERS):
     log.warn("Groups: ")
     for group in GROUPS.keys():
         log.warn(f"{group}: {GROUPS[group]['Users']}")
@@ -564,31 +568,31 @@ def modGroupMem(log, GROUPS, USERS):
                 group = input(log.warn("Add a user to which group? "))
                 if group in GROUPS.keys():
                     log.warn("Users: ")
-                    for user in normUsers:
-                        log.warn(user)
+                    for user in NORMUSERS:
+                        log.warn(user.name)
                     user = input(f"Add which user to {group}? ")
-                    if user in normUsers:
+                    if user in [user.name for user in NORMUSERS]:
                         os.system(f"usermod -a - {group} {user}")
                     else:
                         log.error("User doesn't exist!")
                 else:
                     log.error(f"Group {group} doesn't exist!")
-                    modGroupMem(log, GROUPS, USERS)
+                    modGroupMem(log, GROUPS, USERS, NORMUSERS)
             elif answer("Remove users from a group?", log):
                 run = False
                 group = input(log.warn("Remove a user from which group? "))
                 if group in GROUPS.keys():
                     log.warn("Users: ")
-                    for user in normUsers:
-                        log.warn(user)
+                    for user in NORMUSERS:
+                        log.warn(user.name)
                     user = input(f"Remove which user from {group}? ")
-                    if user in normUsers:
+                    if user in [user.name for user in NORMUSERS]:
                         os.system(f"deluser {user} {group}")
                     else:
                         log.error("User doesn't exist!")
 
 # Set permissions on files
-def permissions(log):
+def permissions(log, NORMUSERS):
     # Set permissions on /etc/passwd, /etc/passwd-, /etc/group, /etc/group-
     files1 = ["/etc/passwd", "/etc/passwd-", "/etc/group", "/etc/group-"]
     for file in files1:
@@ -605,13 +609,12 @@ def permissions(log):
         os.system(f"chmod u-x,g-wx,o-rwx {file}")
         log.done(f"Set permissions on {file}!")
     
-    for user in USERS:
-        if user.uid > 999:
-            if os.path.isdir(f"/home/{user.name}"):
-                os.system(f"chmod g-w,o-rwx /home/{user.name}")
+    for user in NORMUSERS:
+        if os.path.isdir(user.home_dir):
+            os.system(f"chmod g-w,o-rwx {user.home_dir}")
 
 # Configure password settings
-def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
+def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     # Installing PAM (Pluggable Authentication Module)
     log.text("Installing PAM...")
     os.system("apt install libpam-pwquality -y")
@@ -653,9 +656,8 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD):
 
     # Update user passwords
     goodUsers = []
-    for user in USERS:
-        if user.uid > 999:
-            goodUsers.append(user.name)
+    for user in NORMUSERS:
+        goodUsers.append(user.name)
     try:
         goodUsers.remove("root")
         goodUsers.remove("syslog")
@@ -1717,7 +1719,7 @@ def ufw(log):
     log.text("---- End of Status -----")
 
 # Find Unauthorizerd Users
-def authUsers(log, USERS, USERFILE, OSTYPE):
+def authUsers(log, NORMUSERS, USERFILE, OSTYPE):
     with open(USERFILE, "r") as file:
         users = file.read().split("\n")
         goodUsers = []
@@ -1726,11 +1728,8 @@ def authUsers(log, USERS, USERFILE, OSTYPE):
     goodUsers.append("root")
     goodUsers = [item for item in goodUsers if item != "" or item != "\n"]
     users = []
-    log.error(goodUsers)
-    for user in USERS:
-        if user.uid > 999:
-            users.append(user.name)
-    log.error(users)
+    for user in NORMUSERS:
+        users.append(user.name)
     for user in users:
         if not user in goodUsers:
             if answer(f"Unauthorized user '{user}' detected: Remove?", log):
@@ -1800,4 +1799,4 @@ def authAdmins(log, ADMINFILE, OSTYPE):
                     log.text(f"Proceeding without removing '{admin}' from the sudo group.")
 
 # Run the main file
-mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER)
+mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER, SYSUSERS, NORMALUSERS)
