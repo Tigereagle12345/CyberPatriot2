@@ -494,9 +494,9 @@ def addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS):
         else:
             os.system(f"useradd -m {name}")
             process = pexpect.spawn(f"passwd {name}")
-            process.expect("New password: ")
+            process.expect("New password:")
             process.sendline(MASTER_PASSWORD)
-            process.expect("Retype new password: ")
+            process.expect("Retype new password:")
             process.sendline(MASTER_PASSWORD)
             log.done(f"Added new user {name}!")
             addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
@@ -674,9 +674,9 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
         if answer(f"Change password for {user} to the master password?", log):
             log.text(f"Changing {user}'s password...")
             process = pexpect.spawn(f"passwd {user}")
-            process.expect("New password: ")
+            process.expect("New password:")
             process.sendline(MASTER_PASSWORD)
-            process.expect("Retype new password: ")
+            process.expect("Retype new password:")
             process.sendline(MASTER_PASSWORD)
             log.done(f"{user}'s password changed to the master password (mT80F0!t07zCg@D#)!")
         elif answer(f"Change password for {user} manually?", log):
@@ -688,9 +688,9 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
                     run = False
                     log.text(f"Changing {user}'s password...")
                     process = pexpect.spawn(f"passwd {user}")
-                    process.expect("New password: ")
+                    process.expect("New password:")
                     process.sendline(password)
-                    process.expect("Retype new password: ")
+                    process.expect("Retype new password:")
                     process.sendline(password)
                     log.done(f"{user}'s password changed to the your password ({password}])!")
                 else:
