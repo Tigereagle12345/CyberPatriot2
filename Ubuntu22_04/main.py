@@ -143,6 +143,11 @@ for user in USERS:
         else:
             NORMUSERS.append(user)
 
+for user in ["root", "nobody", "syslog"]:
+    if user in [user.name for user in NORMUSERS]:
+        NORMUSERS.remove(user)
+        SYSUSERS.append(user)
+
 MASTER_PASSWORD = "mT80F0!t07zCg@D#"
 
 CURR_USER = os.getlogin()
@@ -664,7 +669,6 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
         goodUsers.remove("syslog")
     except:
         pass
-    log.error(goodUsers)
     pause(log)
     for user in goodUsers:
         if answer(f"Change password for {user} to the master password?", log):
@@ -678,7 +682,8 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
         elif answer(f"Change password for {user} manually?", log):
             run = True
             while run:
-                password = input(log.warn("Type new password (Master password is mT80F0!t07zCg@D#): "))
+                log.answer("Type new password (Master password is mT80F0!t07zCg@D#):")
+                password = input(" ")
                 if answer(f"Should {user}'s password be changed to {password}?", log):
                     run = False
                     log.text(f"Changing {user}'s password...")
