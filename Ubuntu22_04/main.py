@@ -1585,11 +1585,11 @@ def aide(log, CURR_DIR, CURR_USER):
     # Schedule a cron job to run AIDE
     log.text("Scheduling a cron job to run AIDE...")
     # Initialize cron
-    cron = CronTab()
+    cron = CronTab(user="root")
     # Create cron job
     job = cron.new(command="/usr/bin/aide.wrapper --config /etc/aide/aide.conf --check")
     # Schedule cron job
-    job.hour.every(5)
+    job.setall("0 5 * * *")
     # Write cron job
     cron.write()
     
@@ -1735,7 +1735,7 @@ def authUsers(log, NORMUSERS, USERFILE, OSTYPE):
         userDescs[user.name] = user.desc
     for user in users:
         if not user in goodUsers:
-            if answer(f"Unauthorized user '{user}' detected ({userDescs[user]}): Remove?", log):
+            if answer(f"Unauthorized user '{user}' detected (Description: {userDescs[user]}): Remove?", log):
                 try:
                     LINUX = OSTYPE[1]
                     if LINUX:
