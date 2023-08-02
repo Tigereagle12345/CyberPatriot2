@@ -1227,13 +1227,13 @@ def delServices(log):
     log.text("Deleting possibly dangerous services...")
     
     # Uninstall XServer
-    if answer("Should XServer be installed?", log):
+    if not answer("Should XServer be installed?", log):
         log.text("Uninstalling XServer...")
         os.system("apt purge xserver-xorg* -y")
         log.text("XServer uninstalled!")
 
     # Uninstall Avahi Server
-    if answer("Should Avahi Server be installed?", log):
+    if not answer("Should Avahi Server be installed?", log):
         log.text("Uninstalling Avahi Server...")
         os.system("systemctl stop avahi-daaemon.service")
         os.system("systemctl stop avahi-daemon.socket")
@@ -1241,93 +1241,93 @@ def delServices(log):
         log.text("Avahi Server uninstalled!")
 
     # Uninstall CUPS
-    if answer("Should CUPS (Printing driver) be installed?", log):
+    if not answer("Should CUPS (Printing driver) be installed?", log):
         log.text("Uninstalling CUPS...")
         os.system("apt purge cups -y")
         log.text("CUPS uninstalled!")
 
     # Uninstall DHCP Server
-    if answer("Should DHCP Server be installed?", log):
+    if not answer("Should DHCP Server be installed?", log):
         log.text("Uninstalling DHCP Server...")
         os.system("apt purge isc-dhcp-server -y")
         log.text("DHCP Server uninstalled!")
 
     # Uninstall LDAP Server
-    if answer("Should LDAP Server be installed?", log):
+    if not answer("Should LDAP Server be installed?", log):
         log.text("Uninstalling LDAP Server...")
         os.system("apt purge slapd -y")
         os.system("apt purge ldap-utils -y")
         log.text("LDAP Server uninstalled!")
     
     # Uninstall NFS
-    if answer("Should NFS (Network File System) be installed?", log):
+    if not answer("Should NFS (Network File System) be installed?", log):
         log.text("Uninstalling NFS...")
         os.system("apt purge nfs-kernel-server -y")
         log.text("NFS uninstalled!")
     
     # Uninstall DNS Server
-    if answer("Should DNS Server (bind9) be installed?", log):
+    if not answer("Should DNS Server (bind9) be installed?", log):
         log.text("Uninstalling DNS Server...")
         os.system("apt purge bind9 -y")
         log.text("DNS Server uninstalled!")
 
     # Uninstall FTP Server
-    if answer("Should FTP server be installed?", log):
+    if not answer("Should FTP server be installed?", log):
         log.text("Uninstalling FPT server...")
         os.system("apt purge vsftpd -y")
         log.text("FTP server uninstalled!")
     
     # Uninstall HTTP servers
-    if answer("Should HTTP server be installed?", log):
+    if not answer("Should HTTP server be installed?", log):
         log.text("Uninstalling HTTP server...")
         os.system("apt purge apache2 -y")
         os.system("apt purge nginx -y")
         log.text("HTTP server uninstalled!")
 
     # Uninstall IMAP and POP3 server
-    if answer("Should IMAP and POP3 server be installed?", log):
+    if not answer("Should IMAP and POP3 server be installed?", log):
         log.text("Uninstalling IMAP and POP3 server...")
         os.system("apt purge dovecot-imapd dovecot-pop3d -y")
         log.text("IMAP and POP3 server uninstalled!")
 
     # Uninstall SAMBA
-    if answer("Should SAMBA be installed?", log):
+    if not answer("Should SAMBA be installed?", log):
         log.text("Uninstalling SAMBA...")
         os.system("apt purge samba -y")
         log.text("SAMBA uninstalled!")
 
     # Uninstall Squid HTTP Proxy Server
-    if answer("Should Squid HTTP Proxy Server be installed?", log):
+    if not answer("Should Squid HTTP Proxy Server be installed?", log):
         log.text("Uninstalling Squid HTTP Proxy Server...")
         os.system("apt purge squid -y")
         log.text("Squid HTTP Proxy Server uninstalled!")
 
     # Uninstall SNMP Server
-    if answer("Should SNMP Server be installed?", log):
+    if not answer("Should SNMP Server be installed?", log):
         log.text("Uninstalling SNMP Server...")
         os.system("apt purge snmp -y")
         log.text("SNMP Server uninstalled!")
 
     # Uninstall NIS
-    if answer("Should NIS be installed?", log):
+    if not answer("Should NIS be installed?", log):
         log.text("Uninstalling NIS...")
         os.system("apt purge nis -y")
         log.text("NIS uninstalled!")
 
     # Uninstall talk
-    if answer("Should talk be installed?", log):
+    if not answer("Should talk be installed?", log):
         log.text("Uninstalling talk...")
         os.system("apt purge talk -y")
         log.text("Talk uninstalled!")
 
     # Uninstall telnet
-    if answer("Should telnet be installed?", log):
+    if not answer("Should telnet be installed?", log):
         log.text("Uninstalling telnet...")
         os.system("apt purge telnet -y")
         log.text("Telnet uninstalled!")
 
     # Uninstall RPC
-    if answer("Should RPC be installed?", log):
+    if not answer("Should RPC be installed?", log):
         log.text("Uninstalling RPC...")
         os.system("apt purge rpcbind -y")
         log.text("RPC uninstalled!")
