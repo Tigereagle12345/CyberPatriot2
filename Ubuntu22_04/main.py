@@ -1799,4 +1799,4 @@ def authAdmins(log, ADMINFILE, OSTYPE):
                     log.text(f"Proceeding without removing '{admin}' from the sudo group.")
 
 # Run the main file
-mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER, SYSUSERS, NORMALUSERS)
+mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MASTER_PASSWORD, CURR_USER, SYSUSERS, NORMUSERS)
