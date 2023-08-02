@@ -68,10 +68,11 @@ class Log():
             log.error("Please provide a logging level!\nOptions:\n-'done'\n-'text'\n-'head'\n-'warn'\n-'error'")
 
 class User():
-    def __init__(self, name, uid, gid, home_dir, shell):
+    def __init__(self, name, uid, gid, desc, home_dir, shell):
         self.name = name
         self.uid = int(uid)
         self.gid = int(gid)
+        self.desc = desc
         self.home_dir = home_dir
         self.shell = shell
 #----- End Of Classes -----
@@ -124,7 +125,7 @@ try:
         with open("/etc/passwd", "r") as file:
             for line in file.readlines():
                 lineInfo = line.split(":")
-                USERS.append(User(lineInfo[0], lineInfo[2], lineInfo[3], lineInfo[5], lineInfo[6].replace("\n", "")))
+                USERS.append(User(lineInfo[0], lineInfo[2], lineInfo[3], lineInfo[4], lineInfo[5], lineInfo[6].replace("\n", "")))
         USERNAMES = [user.name for user in USERS]
 except Exception as e:
     log.error(f"Error: {e}")
@@ -1728,11 +1729,13 @@ def authUsers(log, NORMUSERS, USERFILE, OSTYPE):
     goodUsers.append("root")
     goodUsers = [item for item in goodUsers if item != "" or item != "\n"]
     users = []
+    userDescs = {}
     for user in NORMUSERS:
         users.append(user.name)
+        userDescs[user.name] = user.desc
     for user in users:
         if not user in goodUsers:
-            if answer(f"Unauthorized user '{user}' detected: Remove?", log):
+            if answer(f"Unauthorized user '{user}' detected ({userDescs[user]}): Remove?", log):
                 try:
                     LINUX = OSTYPE[1]
                     if LINUX:
