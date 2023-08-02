@@ -993,8 +993,8 @@ def audit(log, CURR_DIR):
 
     # Set auditd rules
     log.text("Setting rules for auditd...")
-    with open("/etc/audit/audit.rules", "w") as file:
-        file.write(open(os.path.join(CURR_DIR, "config/audit.rules")).read())
+    with open("/etc/audit/rules.d/50-scope.rules", "w") as file:
+        file.write(open(os.path.join(CURR_DIR, "config/50-scope.rules")).read())
     
     with open("/etc/audit/rules.d/50-user_emulation.rules", "w") as file:
         file.write(open(os.path.join(CURR_DIR, "config/50-user_emulation.rules")).read())
