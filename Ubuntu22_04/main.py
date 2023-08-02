@@ -143,11 +143,6 @@ for user in USERS:
         else:
             NORMUSERS.append(user)
 
-for user in ["root", "nobody", "syslog"]:
-    if user in [user.name for user in NORMUSERS]:
-        NORMUSERS.remove(user)
-        SYSUSERS.append(user)
-
 MASTER_PASSWORD = "mT80F0!t07zCg@D#"
 
 CURR_USER = os.getlogin()
