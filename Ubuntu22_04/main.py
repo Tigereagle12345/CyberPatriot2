@@ -633,7 +633,14 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
         with open(os.path.join(CURR_DIR, "config/common-auth"), "r") as source:
             file.write(source.read())
     with open("/etc/pam.d/common-account", "a") as file:
-        file.write("account required pam_faillock.so")
+        with open("/etc/pam.d/common-account", "r") as source:
+            text = source.read()
+            textLines = text.split("\n")
+            for line in textLines:
+                if "account required" in line:
+                    line = "account required pam_faillock.so"
+                text = text + f"\n{line}"
+            file.write(text)
     log.done("Lockout for failed password attempts enabled!")
     
     # Disable password reuse to the last 5 passwords
