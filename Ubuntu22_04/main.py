@@ -632,7 +632,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     with open("/etc/pam.d/common-auth", "w") as file:
         with open(os.path.join(CURR_DIR, "config/common-auth"), "r") as source:
             file.write(source.read())
-    with open("/etc/pam.d/common-account", "a") as file:
+    with open("/etc/pam.d/common-account", "w") as file:
         with open("/etc/pam.d/common-account", "r") as source:
             text = source.read()
             textLines = text.split("\n")
@@ -650,7 +650,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
 
     # Configure failock
     log.text("Configuring faillock...")
-    with open("/etc/security/faillock.conf", "a") as file:
+    with open("/etc/security/faillock.conf", "w") as file:
         # Disable the lockout with the command "/usr/sbin/faillock --user username --reset"
         file.write("\ndeny = 4\nfail_interval = 900\nunlock time = 600")
     log.done("Faillock configured!")
@@ -676,9 +676,9 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
         if answer(f"Change password for {user} to the master password?", log):
             log.text(f"Changing {user}'s password...")
             process = pexpect.spawn(f"passwd {user}")
-            process.expect("New Password:")
+            process.expect("New password:")
             process.sendline(MASTER_PASSWORD)
-            process.expect("Retype new Password:")
+            process.expect("Retype new password:")
             process.sendline(MASTER_PASSWORD)
             log.done(f"{user}'s password changed to the master password (mT80F0!t07zCg@D#)!")
         elif answer(f"Change password for {user} manually?", log):
