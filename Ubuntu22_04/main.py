@@ -195,6 +195,9 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     # Configure dpkg
     os.system("dpkg --configure -a")
 
+    # Remove Postfix due to possible crashes
+    os.system("apt purge postfix -y")
+
     # Add Google's DNS To Fix Potential DNS Server Issues (Disabled: Can be found in ./fix-apt.sh)
     #os.system("""echo "nameserver 8.8.8.8" | sudo tee /etc/resolvconf/resolv.conf.d/base > /dev/null""")
 
