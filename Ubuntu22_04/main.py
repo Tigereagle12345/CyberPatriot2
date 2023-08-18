@@ -629,7 +629,6 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     with open("/etc/security/pwquality.conf", "a") as file:
         file.write("\nminlen = 14")
     log.done("Password complexity requirements set!")
-    pause(log)
 
     # Enable lockout for failed password attempts
     log.text("Enabling lockout for failed password attempts...")
