@@ -11,7 +11,7 @@ echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
 
 apt-get update -y
 apt-get upgrade -y
-apt-get --fix-missing update -y
+apt-get update --fix-missing -y
 apt-get dist-upgrade -y
 
 apt-get install software-properties-common -y

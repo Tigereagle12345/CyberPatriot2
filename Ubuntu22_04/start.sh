@@ -3,7 +3,7 @@ echo "Setting up script..."
 
 apt update -y
 apt upgrade -y
-apt upgrade --fix-missing -y
+apt update --fix-missing -y
 
 apt install python3 -y
 apt install python3-pip -y || apt install python-pip -y
