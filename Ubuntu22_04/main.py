@@ -629,6 +629,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     with open("/etc/security/pwquality.conf", "a") as file:
         file.write("\nminlen = 14")
     log.done("Password complexity requirements set!")
+    pause(log)
 
     # Enable lockout for failed password attempts
     log.text("Enabling lockout for failed password attempts...")
@@ -645,11 +646,13 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
                 text = text + f"\n{line}"
             file.write(text)
     log.done("Lockout for failed password attempts enabled!")
+    pause(log)
     
     # Disable password reuse to the last 5 passwords
     log.text("Disabling password reuse...")
     # Set in the /etc/pam.d/common-auth file above
     log.done("Users cannot reuse their last 5 passwords!")
+    pause(log)
 
     # Configure failock
     log.text("Configuring faillock...")
@@ -657,6 +660,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
         # Disable the lockout with the command "/usr/sbin/faillock --user username --reset"
         file.write("\ndeny = 4\nfail_interval = 900\nunlock time = 600")
     log.done("Faillock configured!")
+    pause(log)
 
     # Ensure password hashing algorithm is set to yescrypt (Latest recommended standards as of writing at 27/7/23)
     log.text("Setting hashing algorithm to yescrypt...")
@@ -664,6 +668,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
         with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
             file.write(source.read())
     log.done("Hashing algorithm set to yescrypt")
+    pause(log)
 
     # Update user passwords
     goodUsers = []
