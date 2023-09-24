@@ -647,7 +647,7 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
 
     # Configure failock
     log.text("Configuring faillock...")
-    with open("/etc/security/faillock.conf", "w") as file:
+    with open("/etc/security/faillock.conf", "a") as file:
         # Disable the lockout with the command "/usr/sbin/faillock --user username --reset"
         file.write("\ndeny = 4\nfail_interval = 900\nunlock time = 600")
     log.done("Faillock configured!")
