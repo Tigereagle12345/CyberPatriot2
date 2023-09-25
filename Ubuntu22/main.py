@@ -656,12 +656,12 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     pause(log)
 
     # Ensure password hashing algorithm is set to yescrypt (Latest recommended standards as of writing at 27/7/23)
-    log.text("Setting hashing algorithm to yescrypt...")
-    with open("/etc/pam.d/common-password", "w") as file:
-        with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
-            file.write(source.read())
-    log.done("Hashing algorithm set to yescrypt")
-    pause(log)
+    #log.text("Setting hashing algorithm to yescrypt...")
+    #with open("/etc/pam.d/common-password", "w") as file:
+    #    with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
+    #        file.write(source.read())
+    #log.done("Hashing algorithm set to yescrypt")
+    #pause(log)
 
     # Update user passwords
     goodUsers = []
