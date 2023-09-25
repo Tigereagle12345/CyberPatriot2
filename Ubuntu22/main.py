@@ -623,12 +623,14 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     log.text("Installing PAM...")
     os.system("apt install libpam-pwquality -y")
     log.done("Done!")
+    pause(log)
 
     # Setting password complexity requirements according to the CIS Benchmark for Ubuntu 22.04
     log.text("Setting password complexity requirements...")
     with open("/etc/security/pwquality.conf", "a") as file:
         file.write("\nminlen = 14")
     log.done("Password complexity requirements set!")
+    pause(log)
 
     # Enable lockout for failed password attempts
     log.text("Enabling lockout for failed password attempts...")
