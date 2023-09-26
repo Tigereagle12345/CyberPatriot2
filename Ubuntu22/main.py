@@ -417,6 +417,19 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     os.system("reboot")
 
 # ----- Functions -----
+# Configure Lightdm
+def lightdm(log, CURR_DIR):
+    log.text("Configuring Lightdm...")
+    if os.path.isdir("/usr/share/lightdm/lightdm.conf.d/"):
+        if os.path.isfile("50-ubuntu.conf):
+            mode = "a"
+        else:
+            mode = "w"
+        with open(os.path.join(CURR_DIR, "config/50-ubuntu.conf"), "r") as source:
+            with open("/usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf", mode) as file:
+                file.write(source.read())
+            
+
 # Confgure Firefox settings
 def firefox(log, NORMUSERS, CURR_DIR):
     log.text("Updating firefox...")
