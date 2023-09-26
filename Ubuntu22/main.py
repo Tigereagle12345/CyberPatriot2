@@ -1314,7 +1314,12 @@ def delServices(log):
     # Uninstall SAMBA
     if not answer("Should SAMBA be installed?", log):
         log.text("Uninstalling SAMBA...")
+        os.system("apt remove samba -y")
+        os.system("apt remove samba-common -y")
+        os.system("apt remove samba-common-bin -y")
         os.system("apt purge samba -y")
+        os.system("rm -rf /var/lib/samba/printers/x64")
+        os.system("rm -rf /var/lib/samba/printers/W32X86")
         log.text("SAMBA uninstalled!")
 
     # Uninstall Squid HTTP Proxy Server
