@@ -669,12 +669,18 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     pause(log)
 
     # Ensure password hashing algorithm is set to yescrypt (Latest recommended standards as of writing at 27/7/23)
-    #log.text("Setting hashing algorithm to yescrypt...")
-    #with open("/etc/pam.d/common-password", "w") as file:
-    #    with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
-    #        file.write(source.read())
-    #log.done("Hashing algorithm set to yescrypt")
-    #pause(log)
+    log.text("Setting hashing algorithm to yescrypt...")
+    with open("/etc/pam.d/common-password", "w") as file:
+        with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
+            file.write(source.read())
+    log.done("Hashing algorithm set to yescrypt")
+    pause(log)
+
+    # Configure /etc/login.defs
+    log.text("Configuring /etc/login.defs...")
+    with open("/etc/login.defs", "w") as file:
+        with open(os.path.join(CURR_DIR, "config/login.defs")) as source:
+            file.write(source.read())
 
     # Update user passwords
     goodUsers = []
@@ -711,12 +717,6 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
                     log.done(f"{user}'s password changed to the your password ({password}])!")
                 else:
                     log.text("Ok, trying again...")
-
-    # Configure /etc/login.defs
-    log.text("Configuring /etc/login.defs...")
-    with open("/etc/login.defs", "w") as file:
-        with open(os.path.join(CURR_DIR, "config/login.defs")) as source:
-            file.write(source.read())
 
     os.system("useradd -D -f 30")
     # Ensure default group for the root account is GID 0
