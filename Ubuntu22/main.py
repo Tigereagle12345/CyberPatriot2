@@ -421,7 +421,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
 def lightdm(log, CURR_DIR):
     log.text("Configuring Lightdm...")
     if os.path.isdir("/usr/share/lightdm/lightdm.conf.d/"):
-        if os.path.isfile("50-ubuntu.conf):
+        if os.path.isfile("50-ubuntu.conf"):
             mode = "a"
         else:
             mode = "w"
