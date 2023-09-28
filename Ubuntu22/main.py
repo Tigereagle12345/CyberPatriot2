@@ -352,7 +352,9 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
 
     # Find unowned files
     log.text("Finding unowned files...")
-    result = subprocess.run(["find", "/", "-nogroup", "-nouser"], stdout=subprocess.PIPE).split("\n")
+    result = subprocess.Popen(["find", "/", "-nogroup", "-nouser"], stdout=subprocess.PIPE)
+    out, err = result.communicate()
+    result = out.split("\n")
     log.warn("These files are unowned:")
     with open(os.path.join(CURR_DIR, "output/unownedFiles.txt"), "w") as output:
         for file in result:
@@ -505,9 +507,9 @@ def addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS):
         else:
             os.system(f"useradd -m {name}")
             process = pexpect.spawn(f"passwd {name}")
-            process.expect("New password:")
+            process.expect("password:")
             process.sendline(MASTER_PASSWORD)
-            process.expect("Retype new password:")
+            process.expect("password:")
             process.sendline(MASTER_PASSWORD)
             log.done(f"Added new user {name}!")
             addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
@@ -669,12 +671,11 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     pause(log)
 
     # Ensure password hashing algorithm is set to yescrypt (Latest recommended standards as of writing at 27/7/23)
-    log.text("Setting hashing algorithm to yescrypt...")
-    with open("/etc/pam.d/common-password", "w") as file:
-        with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
-            file.write(source.read())
-    log.done("Hashing algorithm set to yescrypt")
-    pause(log)
+    #log.text("Setting hashing algorithm to yescrypt...")
+    #with open("/etc/pam.d/common-password", "w") as file:
+    #    with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
+    #        file.write(source.read())
+    #log.done("Hashing algorithm set to yescrypt")
 
     # Configure /etc/login.defs
     log.text("Configuring /etc/login.defs...")
@@ -696,9 +697,9 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
         if answer(f"Change password for {user} to the master password?", log):
             log.text(f"Changing {user}'s password...")
             process = pexpect.spawn(f"passwd {user}")
-            process.expect("New password:")
+            process.expect("password:")
             process.sendline(MASTER_PASSWORD)
-            process.expect("Retype new password:")
+            process.expect("password:")
             process.sendline(MASTER_PASSWORD)
             log.done(f"{user}'s password changed to the master password (mT80F0!t07zCg@D#)!")
         elif answer(f"Change password for {user} manually?", log):
@@ -710,9 +711,9 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
                     run = False
                     log.text(f"Changing {user}'s password...")
                     process = pexpect.spawn(f"passwd {user}")
-                    process.expect("New password:")
+                    process.expect("password:")
                     process.sendline(password)
-                    process.expect("Retype new password:")
+                    process.expect("password:")
                     process.sendline(password)
                     log.done(f"{user}'s password changed to the your password ({password}])!")
                 else:
@@ -1558,9 +1559,9 @@ def restrictCoredumps(log):
 def bootloaderPass(log, MASTER_PASSWORD, CURR_DIR):
     log.text("Setting bootloader password...")
     setup = pexpect.spawn("grub-mkpasswd-pbkdf2")
-    setup.expect("Enter password:")
+    setup.expect("password:")
     setup.sendline(f"{MASTER_PASSWORD}")
-    setup.expect("Reenter password:")
+    setup.expect("password:")
     setup.sendline(f"{MASTER_PASSWORD}")
     setup.expect(pexpect.EOF)
     output = str(setup.before)
