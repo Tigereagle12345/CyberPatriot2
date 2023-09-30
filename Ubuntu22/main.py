@@ -771,17 +771,17 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     log.done("/etc/login.defs is now configured!")
 
     # Remove all users from the shadow groups
-    log.text("Removing users from the shadow group...")
-    with open("/etc/group", "w") as file:
-        with open("/etc/group", "r") as source:
-            textList = source.readlines()
-            text = ""
-            for group in textList:
-                if "shadow:x:" in group:
-                    group = "shadow:x:42:"
-                text = "\n"+group
-            #file.write(text)
-    log.done("Removed all users from the shadow group!")
+    #log.text("Removing users from the shadow group...")
+    #with open("/etc/group", "w") as file:
+    #    with open("/etc/group", "r") as source:
+    #        textList = source.readlines()
+    #        text = ""
+    #        for group in textList:
+    #            if "shadow:x:" in group:
+    #                group = "shadow:x:42:"
+    #            text = "\n"+group
+    #        #file.write(text)
+    #log.done("Removed all users from the shadow group!")
 
 def ssh(log):
     # Check if SSH should be installed
