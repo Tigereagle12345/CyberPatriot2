@@ -505,14 +505,17 @@ def addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS):
             log.error("Username already taken!")
             addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
         else:
-            os.system(f"useradd -m {name}")
-            process = pexpect.spawn(f"passwd {name}")
-            process.expect("password:")
-            process.sendline(MASTER_PASSWORD)
-            process.expect("password:")
-            process.sendline(MASTER_PASSWORD)
-            log.done(f"Added new user {name}!")
-            addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
+            try:
+                os.system(f"useradd -m {name}")
+                process = pexpect.spawn(f"passwd {name}")
+                process.expect("password:")
+                process.sendline(MASTER_PASSWORD)
+                process.expect("password:")
+                process.sendline(MASTER_PASSWORD)
+                log.done(f"Added new user {name}!")
+                addUser(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
+            except:
+                log.error(f"Failed to add user {name}!")
 
 def delUser(log, USERS, NORMUSERS):
     log.warn("Users: ")
@@ -696,12 +699,15 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     for user in goodUsers:
         if answer(f"Change password for {user} to the master password?", log):
             log.text(f"Changing {user}'s password...")
-            process = pexpect.spawn(f"passwd {user}")
-            process.expect("password:")
-            process.sendline(MASTER_PASSWORD)
-            process.expect("password:")
-            process.sendline(MASTER_PASSWORD)
-            log.done(f"{user}'s password changed to the master password (mT80F0!t07zCg@D#)!")
+            try:
+                process = pexpect.spawn(f"passwd {user}")
+                process.expect("password:")
+                process.sendline(MASTER_PASSWORD)
+                process.expect("password:")
+                process.sendline(MASTER_PASSWORD)
+                log.done(f"{user}'s password changed to the master password (mT80F0!t07zCg@D#)!")
+            except:
+                log.error(f"Failed to set password for {user}!")
         elif answer(f"Change password for {user} manually?", log):
             run = True
             while run:
@@ -710,12 +716,15 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
                 if answer(f"Should {user}'s password be changed to {password}?", log):
                     run = False
                     log.text(f"Changing {user}'s password...")
-                    process = pexpect.spawn(f"passwd {user}")
-                    process.expect("password:")
-                    process.sendline(password)
-                    process.expect("password:")
-                    process.sendline(password)
-                    log.done(f"{user}'s password changed to the your password ({password}])!")
+                    try:
+                        process = pexpect.spawn(f"passwd {user}")
+                        process.expect("password:")
+                        process.sendline(password)
+                        process.expect("password:")
+                        process.sendline(password)
+                        log.done(f"{user}'s password changed to the your password ({password}])!")
+                    except:
+                        log.error(f"Failed to set password for {user}")
                 else:
                     log.text("Ok, trying again...")
 
@@ -1558,16 +1567,19 @@ def restrictCoredumps(log):
 # Set bootloader password
 def bootloaderPass(log, MASTER_PASSWORD, CURR_DIR):
     log.text("Setting bootloader password...")
-    setup = pexpect.spawn("grub-mkpasswd-pbkdf2")
-    setup.expect("password:")
-    setup.sendline(f"{MASTER_PASSWORD}")
-    setup.expect("password:")
-    setup.sendline(f"{MASTER_PASSWORD}")
-    setup.expect(pexpect.EOF)
-    output = str(setup.before)
+    try:
+        setup = pexpect.spawn("grub-mkpasswd-pbkdf2")
+        setup.expect("password:")
+        setup.sendline(f"{MASTER_PASSWORD}")
+        setup.expect("password:")
+        setup.sendline(f"{MASTER_PASSWORD}")
+        setup.expect(pexpect.EOF)
+        output = str(setup.before)
 
-    output = output.replace("PBKDF2 hash of your password is ", "")
-    log.done("Bootloader password set!")
+        output = output.replace("PBKDF2 hash of your password is ", "")
+        log.done("Bootloader password set!")
+    except:
+        log.error("Failed to set bootloader password: Please run grub-mkpasswd-pbkdf2")
 
     # Writing config to custom grub file
     log.text("Writing config to custom grub file...")
