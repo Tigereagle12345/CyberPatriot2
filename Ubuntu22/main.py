@@ -542,7 +542,7 @@ def groupMng(log, USERS, NORMUSERS):
     GROUPS = {}
     with open("/etc/group", "r") as file:
         for line in file.readlines():
-            GROUPS[line.split(":")[0]]
+            GROUPS[line.split(":")[0]] = {}
             GROUPS[line.split(":")[0]]["Users"] = line.split(":")[3]
     addGroup(log, GROUPS)
     delGroup(log, GROUPS)
