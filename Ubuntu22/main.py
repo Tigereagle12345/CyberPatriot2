@@ -354,6 +354,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.text("Finding unowned files...")
     result = subprocess.Popen(["find", "/", "-nogroup", "-nouser"], stdout=subprocess.PIPE)
     out, err = result.communicate()
+    out = out.decode()
     result = out.split("\n")
     log.warn("These files are unowned:")
     with open(os.path.join(CURR_DIR, "output/unownedFiles.txt"), "w") as output:
@@ -1514,7 +1515,7 @@ def appArmour(log):
     log.text("Configuring AppArmour...")
     with open("/etc/default/grub", "w") as file:
         with open("/etc/default/grub", "r") as source:
-            fileTextList = source.read().split("\n")
+            fileTextList = source.readlines()
             if "GRUB_CMDLINE_LINUX" in fileTextList:
                 for line in fileTextList:
                     if "GRUB_CMDLINE_LINUX" in line:
@@ -1761,7 +1762,7 @@ def ufw(log):
 # Find Unauthorizerd Users
 def authUsers(log, NORMUSERS, USERFILE, OSTYPE):
     with open(USERFILE, "r") as file:
-        users = file.read().split("\n")
+        users = file.readlines()
         goodUsers = []
         for user in users:
             goodUsers.append(user)
