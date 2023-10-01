@@ -596,7 +596,7 @@ def modGroupMem(log, GROUPS, USERS, NORMUSERS):
                         log.warn(user.name)
                     user = input(f"Add which user to {group}? ")
                     if user in [user.name for user in NORMUSERS]:
-                        os.system(f"usermod -a - {group} {user}")
+                        os.system(f"usermod -a -G {group} {user}")
                     else:
                         log.error("User doesn't exist!")
                 else:
