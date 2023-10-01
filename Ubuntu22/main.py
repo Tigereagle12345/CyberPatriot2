@@ -366,11 +366,12 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
 
     # Ensure all users have a home directory
     for user in NORMUSERS:
-        if not os.path.isdir(user.home_dir):
-            log.text(f"Creating a home directory for {user.name}...")
-            os.mkdir(f"/home/{user.name}")
-            user.home_dir = f"/home/{user.name}"
-            log.done(f"Created a home directory for {user.name}!")
+        if not os.path.exists(user.home_dir):
+            if not os.path.exists(f"/home/{user.name}"):
+                log.text(f"Creating a home directory for {user.name}...")
+                os.mkdir(f"/home/{user.name}")
+                user.home_dir = f"/home/{user.name}"
+                log.done(f"Created a home directory for {user.name}!")
 
     # Set permissions on files
     permissions(log, NORMUSERS)
