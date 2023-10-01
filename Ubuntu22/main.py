@@ -400,7 +400,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Removed unauthorized .netrc, .forward and .rhost files!")
     
     # Manage users
-    userMng(log, USERNAMES, USERS, NORMUSERS)
+    userMng(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
     
     # Manage groups
     groupMng(log, USERS, NORMUSERS)
