@@ -541,7 +541,7 @@ def delUser(log, USERS, NORMUSERS):
 def groupMng(log, USERS, NORMUSERS):
     GROUPS = {}
     with open("/etc/group", "r") as file:
-        for line in file.read():
+        for line in file.readlines():
             GROUPS[line.split(":")[0]]
             GROUPS[line.split(":")[0]]["Users"] = line.split(":")[3]
     addGroup(log, GROUPS)
@@ -897,8 +897,7 @@ def ssh(log):
     else:
         # Remove SSH
         log.text("Ok! Removing ssh...")
-        os.system("apt purge openssh-server -y")
-        os.system("apt purge openssh-client -y")
+        os.system("systemctl stop sshd")
         log.done("SSH removed!")
 
 # Cron
