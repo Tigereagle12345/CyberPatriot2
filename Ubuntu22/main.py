@@ -21,7 +21,7 @@ class Log():
         self.ENDC = '\033[0m'
         self.BOLD = '\033[1m'
         self.UNDERLINE = '\033[4m'
-        self.level = 0
+        self.level = 3
 
     def done(self, text):
         if self.level < 1:
