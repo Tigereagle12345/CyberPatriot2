@@ -1665,6 +1665,7 @@ def update(log):
     os.system("apt dist-upgrade -y")
     os.system("apt --fix-missing update -y")
     os.system("apt install unattended-upgrades -y")
+    os.system("systemctl start unattended-upgrades.service")
     log.done("Finished updating!")
 
 # Install Dependancies
