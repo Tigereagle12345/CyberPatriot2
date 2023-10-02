@@ -1791,7 +1791,8 @@ def authUsers(log, NORMUSERS, USERFILE, OSTYPE):
         for user in users:
             goodUsers.append(user)
     goodUsers.append("root")
-    goodUsers = [item for item in goodUsers if item != "" or item != "\n"]
+    goodUsers.append("nobody")
+    goodUsers = [item for item in goodUsers if item != "" and item != "\n"]
     users = []
     userDescs = {}
     for user in NORMUSERS:
