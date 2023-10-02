@@ -413,6 +413,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     # Remove excess packages
     log.text("Removing excess packages...")
     os.system("apt autoremove -y")
+    os.system("apt autoclean -y")
     log.text("Removed excess packages!")
 
     # Reboot
