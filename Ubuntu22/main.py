@@ -421,6 +421,29 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     os.system("reboot")
 
 # ----- Functions -----
+# Find Unauthorized Services
+def services(log):
+    log.text("Finding unauthorized services...")
+    os.system("service --status-all")
+    if answer("Would you like to stop any services?", log):
+        run = True
+        while run:
+            service = input(log.warn("Please type the name of the service you would like to stop: "))
+            log.done(f"Stopping {service}...")
+            os.system(f"systemctl stop {service}")
+            log.done(f"Stopped {service}")
+            if not answer("Would you like to stop any more services?", log):
+                run = False
+    if answer("Would you like to start any services?", log):
+        run = True
+        while run:
+            service = input(log.warn("Please type the name of the service you would like to start: "))
+            log.done(f"Starting {service}...")
+            os.system(f"systemctl start {service}")
+            log.done(f"Started {service}")
+            if not answer("Would you like to start any more services?", log):
+                run = False
+
 # Configure Lightdm
 def lightdm(log, CURR_DIR):
     log.text("Configuring Lightdm...")
