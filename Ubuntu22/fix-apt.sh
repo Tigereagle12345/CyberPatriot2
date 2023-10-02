@@ -27,4 +27,5 @@ apt-get --fix-missing update -y
 apt-get dist-upgrade -y
 
 apt-get autoremove -y
+apt-get autoclean
 
