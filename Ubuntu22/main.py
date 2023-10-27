@@ -401,14 +401,14 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Removed unauthorized .netrc, .forward and .rhost files!")
     
     # Manage users
-    userMng(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
+    #userMng(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
     
     # Manage groups
-    groupMng(log, USERS, NORMUSERS)
+    #groupMng(log, USERS, NORMUSERS)
 
     # Confgure Firefox settings
-    if answer("Is firefox installed?", log):
-        firefox(log, NORMUSERS, CURR_DIR)
+    #if answer("Is firefox installed?", log):
+        #firefox(log, NORMUSERS, CURR_DIR)
 
     # Remove excess packages
     log.text("Removing excess packages...")
