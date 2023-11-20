@@ -299,7 +299,10 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     warningBanner(log)
 
     # Configure Gnome Display Manager
-    gdm(log)
+    if answer("Is the Gnome Display Manager used on this device?", log):
+        gdm(log)
+    elif answer("Is LightDM used on this device?", log):
+        lightdm(log, CURR_DIR)
 
     # Ensure XDCMP is not enabled
     log.text("Ensuring XDCMP is not enabled...")
@@ -374,7 +377,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
                 log.done(f"Created a home directory for {user.name}!")
 
     # Set permissions on files
-    permissions(log, NORMUSERS)
+    #permissions(log, NORMUSERS)
 
     # Remove unauthorized .netrc, .forward, .rhost files
     log.text("Removing unauthorized .netrc, .forward and .rhost files...")
@@ -407,8 +410,8 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     #groupMng(log, USERS, NORMUSERS)
 
     # Confgure Firefox settings
-    #if answer("Is firefox installed?", log):
-        #firefox(log, NORMUSERS, CURR_DIR)
+    if answer("Is firefox installed?", log):
+        firefox(log, NORMUSERS, CURR_DIR)
 
     # Remove excess packages
     log.text("Removing excess packages...")
@@ -677,14 +680,14 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     pause(log)
 
     # Enable lockout for failed password attempts
-    log.text("Enabling lockout for failed password attempts...")
-    with open("/etc/pam.d/common-auth", "w") as file:
-        with open(os.path.join(CURR_DIR, "config/common-auth"), "r") as source:
-            file.write(source.read())
-    with open("/etc/pam.d/common-account", "w") as file:
-        file.write("account required pam_faillock.so")
-    log.done("Lockout for failed password attempts enabled!")
-    pause(log)
+    #log.text("Enabling lockout for failed password attempts...")
+    #with open("/etc/pam.d/common-auth", "w") as file:
+        #with open(os.path.join(CURR_DIR, "config/common-auth"), "r") as source:
+            #file.write(source.read())
+    #with open("/etc/pam.d/common-account", "w") as file:
+        #file.write("account required pam_faillock.so")
+    #log.done("Lockout for failed password attempts enabled!")
+    #pause(log)
     
     # Disable password reuse to the last 5 passwords
     log.text("Disabling password reuse...")
