@@ -668,7 +668,7 @@ def permissions(log, NORMUSERS):
 def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     # Installing PAM (Pluggable Authentication Module)
     log.text("Installing PAM...")
-    os.system("apt install libpam-pwquality -y")
+    #os.system("apt install libpam-pwquality -y")
     log.done("Done!")
     pause(log)
 
@@ -762,9 +762,9 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     os.system("usermod -g 0 root")
 
     #Ensure default user umask is 027 or more restrictive
-    with open("/etc/pam.d/common-session", "w") as file:
-        with open(os.path.join(CURR_DIR, "config/common-session"), "r") as source:
-            file.write(source.read())
+    #with open("/etc/pam.d/common-session", "w") as file:
+        #with open(os.path.join(CURR_DIR, "config/common-session"), "r") as source:
+            #file.write(source.read())
 
     # Ensure system accounts are secured
     SYSUSERS = []
