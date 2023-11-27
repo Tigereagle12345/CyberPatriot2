@@ -351,7 +351,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Su command disabled!")
 
     # Configure password settings
-    #passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS)
+    passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS)
 
     # Find unowned files
     log.text("Finding unowned files...")
