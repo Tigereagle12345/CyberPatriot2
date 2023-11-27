@@ -257,7 +257,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     aide(log, CURR_DIR, CURR_USER)
 
     # Set bootloader password
-    bootloaderPass(log, MASTER_PASSWORD, CURR_DIR)
+    #bootloaderPass(log, MASTER_PASSWORD, CURR_DIR)
 
     # Disable root account
     log.text("Disabling root account...")
@@ -288,19 +288,18 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     # AppArmour
     appArmour(log)
 
-    # Remove MOTD
-    log.text("Removing the MOTD...")
-
-    if os.path.exists("/etc/motd"):
-        os.remove("/etc/motd")
-    log.done("Removed MOTD!")
-
-    # Configure warning banners
-    warningBanner(log)
-
     # Configure Gnome Display Manager
     if answer("Is the Gnome Display Manager used on this device?", log):
         gdm(log)
+        # Remove MOTD
+        log.text("Removing the MOTD...")
+
+        if os.path.exists("/etc/motd"):
+            os.remove("/etc/motd")
+        log.done("Removed MOTD!")
+
+        # Configure warning banners
+        warningBanner(log)
     elif answer("Is LightDM used on this device?", log):
         lightdm(log, CURR_DIR)
 
