@@ -288,15 +288,15 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     # AppArmour
     appArmour(log)
 
+    # Remove MOTD
+    log.text("Removing the MOTD...")
+    if os.path.exists("/etc/motd"):
+        os.remove("/etc/motd")
+    log.done("Removed MOTD!")
+
     # Configure Gnome Display Manager
     if answer("Is the Gnome Display Manager used on this device?", log):
         gdm(log)
-        # Remove MOTD
-        log.text("Removing the MOTD...")
-
-        if os.path.exists("/etc/motd"):
-            os.remove("/etc/motd")
-        log.done("Removed MOTD!")
 
         # Configure warning banners
         warningBanner(log)
@@ -376,7 +376,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
                 log.done(f"Created a home directory for {user.name}!")
 
     # Set permissions on files
-    #permissions(log, NORMUSERS)
+    permissions(log, NORMUSERS)
 
     # Remove unauthorized .netrc, .forward, .rhost files
     log.text("Removing unauthorized .netrc, .forward and .rhost files...")
@@ -403,10 +403,10 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Removed unauthorized .netrc, .forward and .rhost files!")
     
     # Manage users
-    #userMng(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
+    userMng(log, USERNAMES, USERS, MASTER_PASSWORD, NORMUSERS)
     
     # Manage groups
-    #groupMng(log, USERS, NORMUSERS)
+    groupMng(log, USERS, NORMUSERS)
 
     # Confgure Firefox settings
     if answer("Is firefox installed?", log):
