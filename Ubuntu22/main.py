@@ -288,18 +288,19 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     # AppArmour
     appArmour(log)
 
-    # Remove MOTD
-    log.text("Removing the MOTD...")
-    if os.path.exists("/etc/motd"):
-        os.remove("/etc/motd")
-    log.done("Removed MOTD!")
-
     # Configure Gnome Display Manager
     if answer("Is the Gnome Display Manager used on this device?", log):
         gdm(log)
 
         # Configure warning banners
         warningBanner(log)
+
+        # Remove MOTD
+        if answer("Configure message of the day (Possibly breaks VM)?", log):
+            log.text("Removing the MOTD...")
+            if os.path.exists("/etc/motd"):
+                os.remove("/etc/motd")
+            log.done("Removed MOTD!")
     elif answer("Is LightDM used on this device?", log):
         lightdm(log, CURR_DIR)
 
