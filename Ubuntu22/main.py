@@ -351,7 +351,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Su command disabled!")
 
     # Configure password settings
-    passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS)
+    #passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS)
 
     # Find unowned files
     log.text("Finding unowned files...")
@@ -668,7 +668,7 @@ def permissions(log, NORMUSERS):
 def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     # Installing PAM (Pluggable Authentication Module)
     log.text("Installing PAM...")
-    #os.system("apt install libpam-pwquality -y")
+    os.system("apt install libpam-pwquality -y")
     log.done("Done!")
     pause(log)
 
@@ -680,14 +680,14 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     pause(log)
 
     # Enable lockout for failed password attempts
-    #log.text("Enabling lockout for failed password attempts...")
-    #with open("/etc/pam.d/common-auth", "w") as file:
-        #with open(os.path.join(CURR_DIR, "config/common-auth"), "r") as source:
-            #file.write(source.read())
-    #with open("/etc/pam.d/common-account", "w") as file:
-        #file.write("account required pam_faillock.so")
-    #log.done("Lockout for failed password attempts enabled!")
-    #pause(log)
+    log.text("Enabling lockout for failed password attempts...")
+    with open("/etc/pam.d/common-auth", "w") as file:
+        with open(os.path.join(CURR_DIR, "config/common-auth"), "r") as source:
+            file.write(source.read())
+    with open("/etc/pam.d/common-account", "w") as file:
+        file.write("account required pam_faillock.so")
+    log.done("Lockout for failed password attempts enabled!")
+    pause(log)
     
     # Disable password reuse to the last 5 passwords
     log.text("Disabling password reuse...")
@@ -703,11 +703,11 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     pause(log)
 
     # Ensure password hashing algorithm is set to yescrypt (Latest recommended standards as of writing at 27/7/23)
-    #log.text("Setting hashing algorithm to yescrypt...")
-    #with open("/etc/pam.d/common-password", "w") as file:
-    #    with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
-    #        file.write(source.read())
-    #log.done("Hashing algorithm set to yescrypt")
+    log.text("Setting hashing algorithm to yescrypt...")
+    with open("/etc/pam.d/common-password", "w") as file:
+        with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
+            file.write(source.read())
+    log.done("Hashing algorithm set to yescrypt")
 
     # Configure /etc/login.defs
     log.text("Configuring /etc/login.defs...")
@@ -762,9 +762,9 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     os.system("usermod -g 0 root")
 
     #Ensure default user umask is 027 or more restrictive
-    #with open("/etc/pam.d/common-session", "w") as file:
-        #with open(os.path.join(CURR_DIR, "config/common-session"), "r") as source:
-            #file.write(source.read())
+    with open("/etc/pam.d/common-session", "w") as file:
+        with open(os.path.join(CURR_DIR, "config/common-session"), "r") as source:
+            file.write(source.read())
 
     # Ensure system accounts are secured
     SYSUSERS = []
@@ -800,17 +800,17 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     log.done("/etc/login.defs is now configured!")
 
     # Remove all users from the shadow groups
-    #log.text("Removing users from the shadow group...")
-    #with open("/etc/group", "w") as file:
-    #    with open("/etc/group", "r") as source:
-    #        textList = source.readlines()
-    #        text = ""
-    #        for group in textList:
-    #            if "shadow:x:" in group:
-    #                group = "shadow:x:42:"
-    #            text = "\n"+group
-    #        #file.write(text)
-    #log.done("Removed all users from the shadow group!")
+    log.text("Removing users from the shadow group...")
+    with open("/etc/group", "w") as file:
+        with open("/etc/group", "r") as source:
+            textList = source.readlines()
+            text = ""
+            for group in textList:
+                if "shadow:x:" in group:
+                    group = "shadow:x:42:"
+                text = "\n"+group
+            #file.write(text)
+    log.done("Removed all users from the shadow group!")
 
 def ssh(log):
     # Check if SSH should be installed
