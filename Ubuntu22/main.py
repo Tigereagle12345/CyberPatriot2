@@ -377,7 +377,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
                 log.done(f"Created a home directory for {user.name}!")
 
     # Set permissions on files
-    #permissions(log, NORMUSERS)
+    permissions(log, NORMUSERS)
 
     # Remove unauthorized .netrc, .forward, .rhost files
     log.text("Removing unauthorized .netrc, .forward and .rhost files...")
