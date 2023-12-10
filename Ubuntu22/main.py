@@ -660,9 +660,9 @@ def permissions(log, NORMUSERS):
         os.system(f"chmod u-x,g-wx,o-rwx {file}")
         log.done(f"Set permissions on {file}!")
     
-    for user in NORMUSERS:
-        if os.path.isdir(user.home_dir):
-            os.system(f"chmod g-w,o-rwx {user.home_dir}")
+    #for user in NORMUSERS:
+        #if os.path.isdir(user.home_dir):
+            #os.system(f"chmod g-w,o-rwx {user.home_dir}")
 
 # Configure password settings
 def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
