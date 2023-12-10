@@ -653,12 +653,12 @@ def permissions(log, NORMUSERS):
         log.done(f"Set permissions on {file}!")
 
     # Set permissions on /etc/shadow, /etc/shadow-, /etc/gshadow, /etc/gshadow-
-    files2 = ["/etc/shadow", "/etc/shadow-", "/etc/gshadow", "/etc/gshadow-"]
-    for file in files2:
-        log.text(f"Setting permissions on {file}...")
-        os.system(f"chown root:root {file}")
-        os.system(f"chmod u-x,g-wx,o-rwx {file}")
-        log.done(f"Set permissions on {file}!")
+    #files2 = ["/etc/shadow", "/etc/shadow-", "/etc/gshadow", "/etc/gshadow-"]
+    #for file in files2:
+        #log.text(f"Setting permissions on {file}...")
+        #os.system(f"chown root:root {file}")
+        #os.system(f"chmod u-x,g-wx,o-rwx {file}")
+        #log.done(f"Set permissions on {file}!")
     
     #for user in NORMUSERS:
         #if os.path.isdir(user.home_dir):
