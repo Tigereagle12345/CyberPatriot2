@@ -377,7 +377,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
                 log.done(f"Created a home directory for {user.name}!")
 
     # Set permissions on files
-    #permissions(log, NORMUSERS)
+    permissions(log, NORMUSERS)
 
     # Remove unauthorized .netrc, .forward, .rhost files
     log.text("Removing unauthorized .netrc, .forward and .rhost files...")
@@ -653,16 +653,16 @@ def permissions(log, NORMUSERS):
         log.done(f"Set permissions on {file}!")
 
     # Set permissions on /etc/shadow, /etc/shadow-, /etc/gshadow, /etc/gshadow-
-    #files2 = ["/etc/shadow", "/etc/shadow-", "/etc/gshadow", "/etc/gshadow-"]
-    #for file in files2:
-        #log.text(f"Setting permissions on {file}...")
-        #os.system(f"chown root:root {file}")
-        #os.system(f"chmod u-x,g-wx,o-rwx {file}")
-        #log.done(f"Set permissions on {file}!")
+    files2 = ["/etc/shadow", "/etc/shadow-", "/etc/gshadow", "/etc/gshadow-"]
+    for file in files2:
+        log.text(f"Setting permissions on {file}...")
+        os.system(f"chown root:root {file}")
+        os.system(f"chmod u-x,g-wx,o-rwx {file}")
+        log.done(f"Set permissions on {file}!")
     
-    #for user in NORMUSERS:
-        #if os.path.isdir(user.home_dir):
-            #os.system(f"chmod g-w,o-rwx {user.home_dir}")
+    for user in NORMUSERS:
+        if os.path.isdir(user.home_dir):
+            os.system(f"chmod g-w,o-rwx {user.home_dir}")
 
 # Configure password settings
 def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
