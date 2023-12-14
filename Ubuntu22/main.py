@@ -192,6 +192,15 @@ def mainScript(log, CURR_DIR, USERS, USERNAMES, OSTYPE, USERFILE, ADMINFILE, MAS
 
 # Start Script for Ubuntu
 def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MASTER_PASSWORD, CURR_USER, SYSUSERS, NORMUSERS):
+    # Print Banner
+    print("""
+  _   _ _             _        ___ ___   ___         _      _   
+ | | | | |__ _  _ _ _| |_ _  _|_  )_  ) / __| __ _ _(_)_ __| |_ 
+ | |_| | '_ \ || | ' \  _| || |/ / / /  \__ \/ _| '_| | '_ \  _|
+  \___/|_.__/\_,_|_||_\__|\_,_/___/___| |___/\__|_| |_| .__/\__|
+                                                      |_|       
+""")
+    
     # Configure dpkg
     os.system("dpkg --configure -a")
 
