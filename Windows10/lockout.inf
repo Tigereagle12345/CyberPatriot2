@@ -1,0 +1,16 @@
+[System Access]
+LockoutBadCount = 5
+ResetLockoutCount = 15
+LockoutDuration = 15
+AllowAdministratorLockout = 1
+RequireLogonToChangePassword = 1
+ForceLogoffWhenHourExpire = 0
+NewAdministratorName = "Administrator"
+NewGuestName = "Guest"
+ClearTextPassword = 0
+LSAAnonymousNameLookup = 0
+EnableAdminAccount = 0
+EnableGuestAccount = 0
+[Version]
+signature="$CHICAGO$"
+Revision=1
