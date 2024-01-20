@@ -263,7 +263,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Automounting disabled!")
 
     # Install and configure AIDE
-    aide(log, CURR_DIR, CURR_USER)
+    #aide(log, CURR_DIR, CURR_USER)
 
     # Set bootloader password
     #bootloaderPass(log, MASTER_PASSWORD, CURR_DIR)
@@ -305,13 +305,13 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
         warningBanner(log)
 
         # Remove MOTD
-        if answer("Configure message of the day (Possibly breaks VM)?", log):
-            log.text("Removing the MOTD...")
-            if os.path.exists("/etc/motd"):
-                os.remove("/etc/motd")
-            log.done("Removed MOTD!")
-    elif answer("Is LightDM used on this device?", log):
-        lightdm(log, CURR_DIR)
+        #if answer("Configure message of the day (Possibly breaks VM)?", log):
+            #log.text("Removing the MOTD...")
+            #if os.path.exists("/etc/motd"):
+                #os.remove("/etc/motd")
+            #log.done("Removed MOTD!")
+    #elif answer("Is LightDM used on this device?", log):
+        #lightdm(log, CURR_DIR)
 
     # Ensure XDCMP is not enabled
     log.text("Ensuring XDCMP is not enabled...")
