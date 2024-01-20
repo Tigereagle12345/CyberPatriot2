@@ -1667,7 +1667,7 @@ def aide(log, CURR_DIR, CURR_USER):
     # Schedule cron job
     job.setall("0 5 * * *")
     # Write cron job
-    cron.write()
+    #cron.write()
     
 
 # Disable booting unwanted filesystems according to the CIS Ubuntu 22.04 Document
