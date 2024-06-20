@@ -64,8 +64,8 @@ class Log():
         elif level == "error":
             self.level = 4
         else:
-            self.level == 0
-            log.error("Please provide a logging level!\nOptions:\n-'done'\n-'text'\n-'head'\n-'warn'\n-'error'")
+            self.level = 0
+            self.error("Please provide a logging level!\nOptions:\n-'done'\n-'text'\n-'head'\n-'warn'\n-'error'")
 
 class User():
     def __init__(self, name, uid, gid, desc, home_dir, shell):
@@ -164,7 +164,7 @@ def answer(text, log):
     elif proceed in NO:
         return False
     else: 
-        answer(text, log)
+        return answer(text, log)
 
 def pause(log):
     log.answer("Press anything to continue: ")
@@ -397,7 +397,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
                 if answer(f"Should {user.home_dir}/.netrc exist?"):
                     os.system(f"chmod 600 {os.path.join(user.home_dir, '.netrc')}")
                 else:
-                    os.remove({os.path.join(user.home_dir, ".netrc")})
+                    os.remove(os.path.join(user.home_dir, ".netrc"))
             # .forward
             if os.path.exists(os.path.join(user.home_dir, ".forward")):
                 if answer(f"Should {user.home_dir}/.forward exist?"):
@@ -1535,7 +1535,7 @@ def warningBanner(log):
 
     # Configure permissions for remote warning banners
     log.text("Configuring permissions for remote warning banners...")
-    os.system("chown root:root $(readlink -e /etc/issue.net")
+    os.system("chown root:root $(readlink -e /etc/issue.net)")
     os.system("chmod u-x,go-wx $(readlink -e /etc/issue.net)")
     log.done("Configured permissions for remote warning banners!")
 
