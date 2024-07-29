@@ -21,4 +21,6 @@ echo "Finished setting up!"
 SCRIPT=$(readlink -f $0)
 SCRIPTPATH="dirname $SCRIPT"
 
+echo $SCRIPTPATH
+
 python3 "$SCRIPTPATH/main.py -v"
