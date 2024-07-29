@@ -19,6 +19,7 @@ pip3 install regex || pip install regex
 echo "Finished setting up!"
 
 echo "$( readlink -f -- "$0"; )"
+echo $0
 
 x = "$( readlink -f -- "$0"; )"
 
