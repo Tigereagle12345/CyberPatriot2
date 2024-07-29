@@ -17,3 +17,9 @@ pip3 install pexpect || pip install pexpect
 pip3 install regex || pip install regex
 
 echo "Finished setting up!"
+
+echo "$( readlink -f -- "$0"; )"
+
+x = "$( readlink -f -- "$0"; )"
+
+python3 "$x/main.py -v"
