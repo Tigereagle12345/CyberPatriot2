@@ -18,9 +18,7 @@ pip3 install regex || pip install regex
 
 echo "Finished setting up!"
 
-echo "$( readlink -f -- "$0"; )"
-echo $0
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH="dirname $SCRIPT"
 
-x = "$( readlink -f -- "$0"; )"
-
-python3 "$x/main.py -v"
+python3 "$SCRIPTPATH/main.py -v"
