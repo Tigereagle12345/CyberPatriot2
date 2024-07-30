@@ -160,6 +160,5 @@ cython_debug/
 #.idea/
 
 # User-modified files
-/Ubuntu22_04/resources/users.txt
-/Ubuntu22_04/resources/admins.txt
-/Ubuntu22_04/output/unownedFiles.txt
+./Ubuntu22/output/
+./Ubuntu22/tmp/
