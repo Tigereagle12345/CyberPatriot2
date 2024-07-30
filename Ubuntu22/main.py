@@ -1891,7 +1891,7 @@ def authUsers(log, NORMUSERS, USERFILE, OSTYPE):
         userDescs[user.name] = user.desc
     for user in users:
         if not user in goodUsers:
-            if answer(f"Unauthorized user '{user}' detected (Description: {userDescs[user].replace(",", "")}): Remove?", log):
+            if answer(f"Unauthorized user '{user}' detected (Description: {userDescs[user].replace(',', '')}): Remove?", log):
                 try:
                     LINUX = OSTYPE[1]
                     if LINUX:
