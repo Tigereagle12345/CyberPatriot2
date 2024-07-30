@@ -206,7 +206,8 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
         DISPLAY = file.read().strip()
     
     # Create tmp directory
-    os.mkdir(os.path.join(CURR_DIR, "tmp"))
+    if not os.path.exists(os.path.join(CURR_DIR, "tmp")):
+        os.mkdir(os.path.join(CURR_DIR, "tmp"))
     
     # Configure dpkg
     os.system("dpkg --configure -a")
