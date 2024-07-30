@@ -270,7 +270,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Automounting disabled!")
 
     # Install and configure AIDE
-    #aide(log, CURR_DIR, CURR_USER)
+    #aide(log, CURR_DIR)
 
     # Set bootloader password
     #bootloaderPass(log, MASTER_PASSWORD, CURR_DIR)
@@ -1717,7 +1717,7 @@ def bootloaderPass(log, MASTER_PASSWORD, CURR_DIR):
     log.done("Permissions for /etc/grub/grub.cfg set!")
 
 # Install and configure AIDE
-def aide(log, CURR_DIR, CURR_USER):
+def aide(log, CURR_DIR):
     # Install AIDE
     log.text("Installing AIDE...")
     os.system("apt install aide aide-common -y")
@@ -1883,7 +1883,7 @@ def authUsers(log, NORMUSERS, USERFILE, OSTYPE):
             goodUsers.append(user)
     goodUsers.append("root")
     goodUsers.append("nobody")
-    goodUsers = [item for item in goodUsers if item != "" and item != "\n"]
+    goodUsers = [user for user in goodUsers if line.strip()]
     users = []
     userDescs = {}
     for user in NORMUSERS:
@@ -1891,7 +1891,7 @@ def authUsers(log, NORMUSERS, USERFILE, OSTYPE):
         userDescs[user.name] = user.desc
     for user in users:
         if not user in goodUsers:
-            if answer(f"Unauthorized user '{user}' detected (Description: {userDescs[user]}): Remove?", log):
+            if answer(f"Unauthorized user '{user}' detected (Description: {userDescs[user].replace(",", "")}): Remove?", log):
                 try:
                     LINUX = OSTYPE[1]
                     if LINUX:
