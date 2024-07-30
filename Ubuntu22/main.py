@@ -1847,21 +1847,22 @@ def authAdmins(log, ADMINFILE, OSTYPE):
                 GROUPS[groupName]["GID"] = groupGID
                 GROUPS[groupName]["Users"] = groupUsers
     
-    # Check members of the adm group
-    if not GROUPS["adm"]["Users"][0] == "":
-        for admin in GROUPS["adm"]["Users"]:
-            if admin not in goodAdmins:
-                if answer(f"Unauthorized user '{admin}' in the adm group: Remove?", log):
-                    try:
-                        LINUX = OSTYPE[1]
-                        if LINUX:
-                            output = subprocess.run(["deluser", admin, "adm"])
-                        if output.returncode == 0:
-                            log.done(f"User '{admin}' removed from adm group!")
-                    except:
-                        log.error(f"Failed to remove '{admin}' from adm group!")
-                else:
-                    log.text(f"Proceeding without removing '{admin}' from the adm group.")
+    # # Check members of the adm group
+    # # NOTE: Disabled as adm group is used for accessing logs and probably not important
+    # if not GROUPS["adm"]["Users"][0] == "":
+    #     for admin in GROUPS["adm"]["Users"]:
+    #         if admin not in goodAdmins:
+    #             if answer(f"Unauthorized user '{admin}' in the adm group: Remove?", log):
+    #                 try:
+    #                     LINUX = OSTYPE[1]
+    #                     if LINUX:
+    #                         output = subprocess.run(["deluser", admin, "adm"])
+    #                     if output.returncode == 0:
+    #                         log.done(f"User '{admin}' removed from adm group!")
+    #                 except:
+    #                     log.error(f"Failed to remove '{admin}' from adm group!")
+    #             else:
+    #                 log.text(f"Proceeding without removing '{admin}' from the adm group.")
     
     # Check members of the sudo group
     if not GROUPS["sudo"]["Users"][0] == "":
