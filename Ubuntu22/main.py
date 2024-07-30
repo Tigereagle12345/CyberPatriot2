@@ -274,7 +274,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     aide(log, CURR_DIR)
 
     # Set bootloader password
-    #bootloaderPass(log, MASTER_PASSWORD, CURR_DIR)
+    bootloaderPass(log, MASTER_PASSWORD, CURR_DIR)
 
     # Disable root account
     log.text("Disabling root account...")
