@@ -1876,33 +1876,23 @@ def ufw(log):
     log.text("---- End of Status -----")
 
 # Find Unauthorizerd Users
-def authUsers(log, NORMUSERS, USERFILE, OSTYPE):
+def authUsers(log, NORMUSERS, USERFILE):
     with open(USERFILE, "r") as file:
-        users = file.readlines()
-        goodUsers = []
-        for user in users:
-            goodUsers.append(user)
-    goodUsers.append("root")
-    goodUsers.append("nobody")
-    goodUsers = [user for user in goodUsers if line.strip()]
-    users = []
-    userDescs = {}
+        goodUsers = file.readlines()
+        goodUsers = [user for user in goodUsers if user.strip()]
+        goodUsers.append("root")
+        goodUsers.append("nobody")
+    
     for user in NORMUSERS:
-        users.append(user.name)
-        userDescs[user.name] = user.desc
-    for user in users:
         if not user in goodUsers:
-            if answer(f"Unauthorized user '{user}' detected (Description: {userDescs[user].replace(',', '')}): Remove?", log):
-                try:
-                    LINUX = OSTYPE[1]
-                    if LINUX:
-                        output = subprocess.run(["deluser", user])
-                    if output.returncode == 0:
-                        log.done(f"User '{user}' deleted!")
-                except:
-                    log.error(f"Failed to remove user '{user}'!")
+            if answer(f"Unauthorised user {user} detected! Remove user?", log):
+                process = subprocess.run(["deluser", user])
+                if process.returncode == 0:
+                    log.done(f"Deleted {user}!")
+                else:
+                    log.error(f"Failed to delete {user}!")
             else:
-                log.text(f"Proceeding without deleting user '{user}'.")
+                log.text("Proceeding without deleting user!")
 
 # Find Unauthorized Administrators
 def authAdmins(log, ADMINFILE, OSTYPE):
