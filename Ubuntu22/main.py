@@ -497,7 +497,7 @@ def firefox(log, NORMUSERS, CURR_DIR):
         log.done("Firefox snap package removed!")
         
         log.text("Installing firefox as a .deb package...")
-        os.system("apt install firefox -y")
+        os.system("apt install firefox -y --allow-downgrades")
         log.done("Firefox installed!")
 
         loc = "/usr/lib/firefox/"
