@@ -308,8 +308,14 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     # Configure Gnome Display Manager
     if "gdm3" in DISPLAY:
         gdm(log)
-    elif answer("Is the Gnome Display Manager used on this device?", log):
-        gdm(log)
+    # elif answer("Is the Gnome Display Manager used on this device?", log):
+    #     gdm(log)
+    
+    # Configure LightDM
+    if "lightdm" in DISPLAY:
+        lightdm(log, CURR_DIR)
+    # elif answer("Is LightDM used on this device?", log):
+    #     lightdm(log, CURR_DIR)
 
     # Configure warning banners
     warningBanner(log)
@@ -320,12 +326,6 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
         if os.path.exists("/etc/motd"):
             os.remove("/etc/motd")
         log.done("Removed MOTD!")
-        
-    # Configure LightDM
-    if "lightdm" in DISPLAY:
-        lightdm(log, CURR_DIR)
-    elif answer("Is LightDM used on this device?", log):
-        lightdm(log, CURR_DIR)
 
     # Install and configure chrony
     chrony(log)
