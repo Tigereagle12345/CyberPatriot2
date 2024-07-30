@@ -201,6 +201,13 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
                                                       |_|       
 """)
     
+    # Get Default Display Manager
+    with open("/etc/X11/default-display-manager", "r") as file:
+        DISPLAY = file.read().strip()
+    
+    # Create tmp directory
+    os.mkdir(os.path.join(CURR_DIR, "tmp"))
+    
     # Configure dpkg
     os.system("dpkg --configure -a")
 
@@ -298,43 +305,44 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     appArmour(log)
 
     # Configure Gnome Display Manager
-    if answer("Is the Gnome Display Manager used on this device?", log):
+    if "gdm3" in DISPLAY:
+        gdm(log)
+    elif answer("Is the Gnome Display Manager used on this device?", log):
         gdm(log)
 
-        # Configure warning banners
-        warningBanner(log)
+    # Configure warning banners
+    warningBanner(log)
 
-        # Remove MOTD
-        #if answer("Configure message of the day (Possibly breaks VM)?", log):
-            #log.text("Removing the MOTD...")
-            #if os.path.exists("/etc/motd"):
-                #os.remove("/etc/motd")
-            #log.done("Removed MOTD!")
-    #elif answer("Is LightDM used on this device?", log):
-        #lightdm(log, CURR_DIR)
-
-    # Ensure XDCMP is not enabled
-    log.text("Ensuring XDCMP is not enabled...")
-    with open("/etc/gdm3/custom.conf", "w") as file:
-        with open("/etc/gdm3/custom.conf", "r") as source:
-            file.write(source.read().replace("Enable=true", ""))
-    log.done("Ensured XDCMP is not enabled!")
+    # Remove MOTD
+    if answer("Configure message of the day?", log):
+        log.text("Removing the MOTD...")
+        if os.path.exists("/etc/motd"):
+            os.remove("/etc/motd")
+        log.done("Removed MOTD!")
+        
+    # Configure LightDM
+    if "lightdm" in DISPLAY:
+        lightdm(log, CURR_DIR)
+    elif answer("Is LightDM used on this device?", log):
+        lightdm(log, CURR_DIR)
 
     # Install and configure chrony
     chrony(log)
 
     # Disable xserver
-    delServices(log)
+    delServices(CURR_DIR, log)
 
     # Remove rsync
-    log.text("Uninstalling rsync...")
-    os.system("apt purge rsync -y")
-    log.done("Rsync uninstalled!")
+    if checkPackageInstall(CURR_DIR, "rsync"):
+        log.text("Uninstalling rsync...")
+        os.system("apt purge rsync -y")
+        log.done("Rsync uninstalled!")
 
     # Remove rsh
-    log.text("Uninstalling rsh...")
-    os.system("apt purge rsh-client -y")
-    log.done("Rsh uninstalled!")
+    if checkPackageInstall(CURR_DIR, "rsh-client"):
+        log.text("Uninstalling rsh...")
+        os.system("apt purge rsh-client -y")
+        log.done("Rsh uninstalled!")
 
     # Disable uncommon network protocols
     uncommonNetProtocols(log)
@@ -434,6 +442,33 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     os.system("reboot")
 
 # ----- Functions -----
+# Get Packages
+def getPackages(CURR_DIR):
+    result = subprocess.run(["dpkg-query", "-W", "-f='${binary:Package}\n'"], stdout=subprocess.PIPE, text=True)
+    if result.returncode == 0:
+        result = result.stdout.replace("'", "")
+        with open(os.path.join(CURR_DIR, "tmp/packages.tmp"), "w") as file:
+            file.write(result)
+        result = result.split("\n")
+        result = [line for line in result if line.strip()]
+        return result
+    else:
+        getPackages(CURR_DIR)
+        
+# Determine if package is installed
+def checkPackageInstall(CURR_DIR, pkg):
+    pkgs = getPackages(CURR_DIR)
+    if type(pkg) == list:
+        for p in pkg:
+            if p in pkgs:
+                return True
+        return False
+    else:
+        if pkg in pkgs:
+            return True
+        else:
+            return False
+    
 # Find Unauthorized Services
 def services(log):
     log.text("Finding unauthorized services...")
@@ -1291,119 +1326,155 @@ def uncommonNetProtocols(log):
             
 
 # Delete services
-def delServices(log):
-    log.text("Deleting possibly dangerous services...")
+def delServices(CURR_DIR, log):
+    log.text("Deleting potentially dangerous services...")
     
     # Uninstall XServer
-    if not answer("Should XServer be installed?", log):
-        log.text("Uninstalling XServer...")
-        os.system("apt purge xserver-xorg* -y")
-        log.text("XServer uninstalled!")
+    pkgs = getPackages(CURR_DIR)
+    combined = '\t'.join(pkgs)
+    if "xserver-xorg" in combined:
+        if not answer("Should XServer be installed?", log):
+            log.text("Uninstalling XServer...")
+            os.system("apt purge xserver-xorg* -y")
+            log.text("XServer uninstalled!")
 
     # Uninstall Avahi Server
-    if not answer("Should Avahi Server be installed?", log):
-        log.text("Uninstalling Avahi Server...")
-        os.system("systemctl stop avahi-daaemon.service")
-        os.system("systemctl stop avahi-daemon.socket")
-        os.system("apt purge avahi-daemon -y")
-        log.text("Avahi Server uninstalled!")
+    if checkPackageInstall(CURR_DIR, "avahi-daemon"):
+        if not answer("Should Avahi Server be installed?", log):
+            log.text("Uninstalling Avahi Server...")
+            os.system("systemctl stop avahi-daaemon.service")
+            os.system("systemctl stop avahi-daemon.socket")
+            os.system("apt purge avahi-daemon -y")
+            log.text("Avahi Server uninstalled!")
 
     # Uninstall CUPS
-    if not answer("Should CUPS (Printing driver) be installed?", log):
-        log.text("Uninstalling CUPS...")
-        os.system("apt purge cups -y")
-        log.text("CUPS uninstalled!")
+    if checkPackageInstall(CURR_DIR, "cups"):
+        if not answer("Should CUPS (Printing driver) be installed?", log):
+            log.text("Uninstalling CUPS...")
+            os.system("apt purge cups -y")
+            log.text("CUPS uninstalled!")
 
     # Uninstall DHCP Server
-    if not answer("Should DHCP Server be installed?", log):
-        log.text("Uninstalling DHCP Server...")
-        os.system("apt purge isc-dhcp-server -y")
-        log.text("DHCP Server uninstalled!")
+    if checkPackageInstall(CURR_DIR, "isc-dhcp-server"):
+        if not answer("Should DHCP Server be installed?", log):
+            log.text("Uninstalling DHCP Server...")
+            os.system("apt purge isc-dhcp-server -y")
+            log.text("DHCP Server uninstalled!")
 
     # Uninstall LDAP Server
-    if not answer("Should LDAP Server be installed?", log):
-        log.text("Uninstalling LDAP Server...")
-        os.system("apt purge slapd -y")
-        os.system("apt purge ldap-utils -y")
-        log.text("LDAP Server uninstalled!")
+    if checkPackageInstall(CURR_DIR, ["slapd", "ldap-utils"]):
+        if not answer("Should LDAP Server be installed?", log):
+            log.text("Uninstalling LDAP Server...")
+            os.system("apt purge slapd -y")
+            os.system("apt purge ldap-utils -y")
+            log.text("LDAP Server uninstalled!")
     
     # Uninstall NFS
-    if not answer("Should NFS (Network File System) be installed?", log):
-        log.text("Uninstalling NFS...")
-        os.system("apt purge nfs-kernel-server -y")
-        log.text("NFS uninstalled!")
+    if checkPackageInstall(CURR_DIR, "nfs-kernel-server"):
+        if not answer("Should NFS (Network File System) be installed?", log):
+            log.text("Uninstalling NFS...")
+            os.system("apt purge nfs-kernel-server -y")
+            log.text("NFS uninstalled!")
     
     # Uninstall DNS Server
-    if not answer("Should DNS Server (bind9) be installed?", log):
-        log.text("Uninstalling DNS Server...")
-        os.system("apt purge bind9 -y")
-        log.text("DNS Server uninstalled!")
+    if checkPackageInstall(CURR_DIR, "bind9"):
+        if not answer("Should DNS Server (bind9) be installed?", log):
+            log.text("Uninstalling DNS Server...")
+            os.system("apt purge bind9 -y")
+            log.text("DNS Server uninstalled!")
 
     # Uninstall FTP Server
-    if not answer("Should FTP server be installed?", log):
-        log.text("Uninstalling FPT server...")
-        os.system("apt purge vsftpd -y")
-        log.text("FTP server uninstalled!")
+    if checkPackageInstall(CURR_DIR, "vsftpd"):
+        if not answer("Should FTP server be installed?", log):
+            log.text("Uninstalling FPT server...")
+            os.system("apt purge vsftpd -y")
+            log.text("FTP server uninstalled!")
     
     # Uninstall HTTP servers
-    if not answer("Should HTTP server be installed?", log):
-        log.text("Uninstalling HTTP server...")
-        os.system("apt purge apache2 -y")
-        os.system("apt purge nginx -y")
-        log.text("HTTP server uninstalled!")
+    if checkPackageInstall(CURR_DIR, ["apache2", "nginx", "squid"]):
+        if answer("Should any HTTP servers be installed?", log):
+            # Uninstall Apache2 server
+            if checkPackageInstall(CURR_DIR, "apache2"):
+                if not answer("Should an Apache2 server be installed?", log):
+                    log.text("Uninstalling Apache2 server...")
+                    os.system("apt purge apache2 -y")
+                    log.text("Apache2 server uninstalled!")
+                    
+            # Uninstall Nginx server
+            if checkPackageInstall(CURR_DIR, "nginx"):    
+                if not answer("Should a Nginx server be installed?", log):
+                    log.text("Uninstalling Nginx server...")
+                    os.system("apt purge nginx -y")
+                    log.text("Nginx server uninstalled!")
+            
+            # Uninstall Squid HTTP Proxy Server
+            if checkPackageInstall(CURR_DIR, "squid"):
+                if not answer("Should Squid HTTP Proxy Server be installed?", log):
+                    log.text("Uninstalling Squid HTTP Proxy Server...")
+                    os.system("apt purge squid -y")
+                    log.text("Squid HTTP Proxy Server uninstalled!")
+                    
+        # Uninstall all HTTP servers
+        else:
+            log.text("Uninstalling all HTTP servers...")
+            os.system("apt purge apache2 -y")
+            os.system("apt purge nginx -y")
+            os.system("apt purge squid -y")
+            log.text("HTTP servers uninstalled!")
 
     # Uninstall IMAP and POP3 server
-    if not answer("Should IMAP and POP3 server be installed?", log):
-        log.text("Uninstalling IMAP and POP3 server...")
-        os.system("apt purge dovecot-imapd dovecot-pop3d -y")
-        log.text("IMAP and POP3 server uninstalled!")
+    if checkPackageInstall(CURR_DIR, ["dovecot-imapd", "dovecot-pop3d"]):
+        if not answer("Should IMAP and POP3 servers be installed?", log):
+            log.text("Uninstalling IMAP and POP3 servers...")
+            os.system("apt purge dovecot-imapd dovecot-pop3d -y")
+            log.text("IMAP and POP3 servers uninstalled!")
 
     # Uninstall SAMBA
-    if not answer("Should SAMBA be installed?", log):
-        log.text("Uninstalling SAMBA...")
-        os.system("apt remove samba -y")
-        os.system("apt remove samba-common -y")
-        os.system("apt remove samba-common-bin -y")
-        os.system("apt purge samba -y")
-        os.system("rm -rf /var/lib/samba/printers/x64")
-        os.system("rm -rf /var/lib/samba/printers/W32X86")
-        log.text("SAMBA uninstalled!")
-
-    # Uninstall Squid HTTP Proxy Server
-    if not answer("Should Squid HTTP Proxy Server be installed?", log):
-        log.text("Uninstalling Squid HTTP Proxy Server...")
-        os.system("apt purge squid -y")
-        log.text("Squid HTTP Proxy Server uninstalled!")
+    if checkPackageInstall(CURR_DIR, ["samba", "samba-common", "samba-common-bin"]):
+        if not answer("Should SAMBA be installed?", log):
+            log.text("Uninstalling SAMBA...")
+            os.system("apt remove samba -y")
+            os.system("apt remove samba-common -y")
+            os.system("apt remove samba-common-bin -y")
+            os.system("apt purge samba -y")
+            os.system("rm -rf /var/lib/samba/printers/x64")
+            os.system("rm -rf /var/lib/samba/printers/W32X86")
+            log.text("SAMBA uninstalled!")
 
     # Uninstall SNMP Server
-    if not answer("Should SNMP Server be installed?", log):
-        log.text("Uninstalling SNMP Server...")
-        os.system("apt purge snmp -y")
-        log.text("SNMP Server uninstalled!")
+    if checkPackageInstall(CURR_DIR, "snmp"):
+        if not answer("Should SNMP Server be installed?", log):
+            log.text("Uninstalling SNMP Server...")
+            os.system("apt purge snmp -y")
+            log.text("SNMP Server uninstalled!")
 
     # Uninstall NIS
-    if not answer("Should NIS be installed?", log):
-        log.text("Uninstalling NIS...")
-        os.system("apt purge nis -y")
-        log.text("NIS uninstalled!")
+    if checkPackageInstall(CURR_DIR, "nis"):
+        if not answer("Should NIS be installed?", log):
+            log.text("Uninstalling NIS...")
+            os.system("apt purge nis -y")
+            log.text("NIS uninstalled!")
 
     # Uninstall talk
-    if not answer("Should talk be installed?", log):
-        log.text("Uninstalling talk...")
-        os.system("apt purge talk -y")
-        log.text("Talk uninstalled!")
+    if checkPackageInstall(CURR_DIR, "talk"):
+        if not answer("Should talk be installed?", log):
+            log.text("Uninstalling talk...")
+            os.system("apt purge talk -y")
+            log.text("Talk uninstalled!")
 
     # Uninstall telnet
-    if not answer("Should telnet be installed?", log):
-        log.text("Uninstalling telnet...")
-        os.system("apt purge telnet -y")
-        log.text("Telnet uninstalled!")
+    if checkPackageInstall(CURR_DIR, "telnet"):
+        if not answer("Should telnet be installed?", log):
+            log.text("Uninstalling telnet...")
+            os.system("apt purge telnet -y")
+            log.text("Telnet uninstalled!")
 
     # Uninstall RPC
-    if not answer("Should RPC be installed?", log):
-        log.text("Uninstalling RPC...")
-        os.system("apt purge rpcbind -y")
-        log.text("RPC uninstalled!")
+    if checkPackageInstall(CURR_DIR, "rpcbind"):
+        if not answer("Should RPC be installed?", log):
+            log.text("Uninstalling RPC...")
+            os.system("apt purge rpcbind -y")
+            log.text("RPC uninstalled!")
 
 # Install and configure chrony
 def chrony(log):
@@ -1510,6 +1581,13 @@ def gdm(log):
     log.text("Updating GDM settings...")
     os.system("dconf update")
     log.done("Updated GDM settings!")
+    
+    # Ensure XDCMP is not enabled
+    log.text("Ensuring XDCMP is not enabled...")
+    with open("/etc/gdm3/custom.conf", "w") as file:
+        with open("/etc/gdm3/custom.conf", "r") as source:
+            file.write(source.read().replace("Enable=true", ""))
+    log.done("Ensured XDCMP is not enabled!")
 
 # Configure warning banners
 def warningBanner(log):
