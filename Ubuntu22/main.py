@@ -249,7 +249,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     installDep(log)
 
     # Authenticate users and user permissions
-    authUsers(log, NORMUSERS, USERFILE, OSTYPE)
+    authUsers(log, NORMUSERS, USERFILE)
     authAdmins(log, ADMINFILE, OSTYPE)
 
     # Enable and setup firewall
