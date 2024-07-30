@@ -321,11 +321,10 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     warningBanner(log)
 
     # Remove MOTD
-    if answer("Configure message of the day?", log):
-        log.text("Removing the MOTD...")
-        if os.path.exists("/etc/motd"):
-            os.remove("/etc/motd")
-        log.done("Removed MOTD!")
+    log.text("Removing the MOTD...")
+    if os.path.exists("/etc/motd"):
+        os.remove("/etc/motd")
+    log.done("Removed MOTD!")
 
     # Install and configure chrony
     chrony(log)
@@ -383,7 +382,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
             log.warn("\n"+file)
             output.write("\n"+file)
     log.warn(f"Files can be found in {os.path.join(CURR_DIR, 'output/unownedFiles.txt')}")
-    pause(log)
+    # pause(log)
 
     # Ensure all users have a home directory
     for user in NORMUSERS:
