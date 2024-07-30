@@ -1884,6 +1884,7 @@ def authUsers(log, NORMUSERS, USERFILE):
         goodUsers.append("nobody")
     
     for user in NORMUSERS:
+        user = user.name
         if not user in goodUsers:
             if answer(f"Unauthorised user {user} detected! Remove user?", log):
                 process = subprocess.run(["deluser", user])
