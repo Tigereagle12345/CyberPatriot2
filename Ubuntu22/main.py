@@ -271,7 +271,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Automounting disabled!")
 
     # Install and configure AIDE
-    #aide(log, CURR_DIR)
+    aide(log, CURR_DIR)
 
     # Set bootloader password
     #bootloaderPass(log, MASTER_PASSWORD, CURR_DIR)
