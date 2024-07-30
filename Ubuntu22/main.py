@@ -1905,7 +1905,9 @@ def authUsers(log, NORMUSERS, USERFILE, OSTYPE):
 
 # Find Unauthorized Administrators
 def authAdmins(log, ADMINFILE, OSTYPE):
-    goodAdmins = [line for line in open(ADMINFILE, "r")]
+    with open(ADMINFILE, "r") as file:
+        goodAdmins = file.readlines()
+    goodAdmins = [user for user in goodAdmins if line.strip()]
     goodAdmins.append("syslog")
 
     GROUPS = {}
@@ -1925,8 +1927,8 @@ def authAdmins(log, ADMINFILE, OSTYPE):
                 GROUPS[groupName]["GID"] = groupGID
                 GROUPS[groupName]["Users"] = groupUsers
     
-    # # Check members of the adm group
-    # # NOTE: Disabled as adm group is used for accessing logs and probably not important
+    # Check members of the adm group
+    # NOTE: Disabled as adm group is used for accessing logs and probably not important
     # if not GROUPS["adm"]["Users"][0] == "":
     #     for admin in GROUPS["adm"]["Users"]:
     #         if admin not in goodAdmins:
