@@ -8,7 +8,6 @@
 - Prevent displaying debug text when running commands
 - Fix AuditD function (audit)
 - Fix password settings (passwd)
-- Fix setting file permissions (permissions)
 - Add the removal of new programs:
   - Wireshark
   - Hashcat
