@@ -1879,9 +1879,9 @@ def ufw(log):
 def authUsers(log, NORMUSERS, USERFILE):
     with open(USERFILE, "r") as file:
         goodUsers = file.readlines()
-        goodUsers = [user.strip() for user in goodUsers if user.strip()]
-        goodUsers.append("root")
-        goodUsers.append("nobody")
+    goodUsers = [user.strip() for user in goodUsers if user.strip()]
+    goodUsers.append("root")
+    goodUsers.append("nobody")
     
     for user in NORMUSERS:
         user = user.name
@@ -1899,7 +1899,7 @@ def authUsers(log, NORMUSERS, USERFILE):
 def authAdmins(log, ADMINFILE, OSTYPE):
     with open(ADMINFILE, "r") as file:
         goodAdmins = file.readlines()
-    goodAdmins = [user for user in goodAdmins if line.strip()]
+    goodAdmins = [user.strip() for user in goodAdmins if line.strip()]
     goodAdmins.append("syslog")
 
     GROUPS = {}
