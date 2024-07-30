@@ -1899,7 +1899,7 @@ def authUsers(log, NORMUSERS, USERFILE):
 def authAdmins(log, ADMINFILE, OSTYPE):
     with open(ADMINFILE, "r") as file:
         goodAdmins = file.readlines()
-    goodAdmins = [user.strip() for user in goodAdmins if line.strip()]
+    goodAdmins = [user.strip() for user in goodAdmins if user.strip()]
     goodAdmins.append("syslog")
 
     GROUPS = {}
@@ -1939,6 +1939,7 @@ def authAdmins(log, ADMINFILE, OSTYPE):
     # Check members of the sudo group
     if not GROUPS["sudo"]["Users"][0] == "":
         for admin in GROUPS["sudo"]["Users"]:
+            admin = admin.strip()
             if admin not in goodAdmins:
                 if answer(f"Unauthorized user '{admin}' in the sudo group: Remove?", log):
                     try:
