@@ -161,4 +161,5 @@ cython_debug/
 
 # User-modified files
 ./Ubuntu22/output/
+./Ubuntu22/resources/
 ./Ubuntu22/tmp/
