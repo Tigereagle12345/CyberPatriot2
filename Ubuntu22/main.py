@@ -1879,7 +1879,7 @@ def ufw(log):
 def authUsers(log, NORMUSERS, USERFILE):
     with open(USERFILE, "r") as file:
         goodUsers = file.readlines()
-        goodUsers = [user for user in goodUsers if user.strip()]
+        goodUsers = [user.strip() for user in goodUsers if user.strip()]
         goodUsers.append("root")
         goodUsers.append("nobody")
     
