@@ -714,14 +714,12 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     log.text("Installing PAM...")
     os.system("apt install libpam-pwquality -y")
     log.done("Done!")
-    pause(log)
 
     # Setting password complexity requirements according to the CIS Benchmark for Ubuntu 22.04
     log.text("Setting password complexity requirements...")
     with open("/etc/security/pwquality.conf", "a") as file:
         file.write("\nminlen = 14")
     log.done("Password complexity requirements set!")
-    pause(log)
 
     # Enable lockout for failed password attempts
     log.text("Enabling lockout for failed password attempts...")
@@ -731,7 +729,6 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     with open("/etc/pam.d/common-account", "w") as file:
         file.write("account required pam_faillock.so")
     log.done("Lockout for failed password attempts enabled!")
-    pause(log)
     
     # Disable password reuse to the last 5 passwords
     log.text("Disabling password reuse...")
@@ -744,7 +741,6 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
         # Disable the lockout with the command "/usr/sbin/faillock --user username --reset"
         file.write("\ndeny = 4\nfail_interval = 900\nunlock time = 600")
     log.done("Faillock configured!")
-    pause(log)
 
     # Ensure password hashing algorithm is set to yescrypt (Latest recommended standards as of writing at 27/7/23)
     log.text("Setting hashing algorithm to yescrypt...")
@@ -766,9 +762,9 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     try:
         goodUsers.remove("root")
         goodUsers.remove("syslog")
+        goodUsers.remove("nobody")
     except:
         pass
-    pause(log)
     for user in goodUsers:
         if answer(f"Change password for {user} to the master password?", log):
             log.text(f"Changing {user}'s password...")
@@ -843,18 +839,18 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     log.done("Default user umask is 027 or more restrictive!")
     log.done("/etc/login.defs is now configured!")
 
-    # Remove all users from the shadow groups
-    log.text("Removing users from the shadow group...")
-    with open("/etc/group", "w") as file:
-        with open("/etc/group", "r") as source:
-            textList = source.readlines()
-            text = ""
-            for group in textList:
-                if "shadow:x:" in group:
-                    group = "shadow:x:42:"
-                text = "\n"+group
-            #file.write(text)
-    log.done("Removed all users from the shadow group!")
+    # # Remove all users from the shadow groups
+    # log.text("Removing users from the shadow group...")
+    # with open("/etc/group", "w") as file:
+    #     with open("/etc/group", "r") as source:
+    #         textList = source.readlines()
+    #         text = ""
+    #         for group in textList:
+    #             if "shadow:x:" in group:
+    #                 group = "shadow:x:42:"
+    #             text = "\n"+group
+    #         #file.write(text)
+    # log.done("Removed all users from the shadow group!")
 
 def ssh(log):
     # Check if SSH should be installed
