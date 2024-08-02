@@ -843,17 +843,17 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     log.text("Removing users from the shadow group...")
     with open("/etc/group", "r") as source:
         textList = source.readlines()
-        print(textList)
+        #print(textList)
     with open("/etc/group", "w") as file:
         text = ""
         for group in textList:
             if "shadow:x:" in group:
                 group = "shadow:x:42:"
-            text = "\n"+group
-            print(text)
+            text = f"{text}{group}"
+            #print(text)
         file.write(text)
     log.done("Removed all users from the shadow group!")
-    pause(log)
+    #pause(log)
 
 def ssh(log):
     # Check if SSH should be installed
