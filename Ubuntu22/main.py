@@ -368,7 +368,7 @@ def ubuntu2204(log, CURR_DIR, USERS, USERNAMES, USERFILE, ADMINFILE, OSTYPE, MAS
     log.done("Su command disabled!")
 
     # Configure password settings
-    #passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS)
+    passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS)
 
     # Find unowned files
     log.text("Finding unowned files...")
@@ -839,18 +839,18 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     log.done("Default user umask is 027 or more restrictive!")
     log.done("/etc/login.defs is now configured!")
 
-    # # Remove all users from the shadow groups
-    # log.text("Removing users from the shadow group...")
-    # with open("/etc/group", "w") as file:
-    #     with open("/etc/group", "r") as source:
-    #         textList = source.readlines()
-    #         text = ""
-    #         for group in textList:
-    #             if "shadow:x:" in group:
-    #                 group = "shadow:x:42:"
-    #             text = "\n"+group
-    #         #file.write(text)
-    # log.done("Removed all users from the shadow group!")
+    # # Remove all users from the shadow group
+    log.text("Removing users from the shadow group...")
+    with open("/etc/group", "r") as source:
+        with open("/etc/group", "w") as file:
+            textList = source.readlines()
+            text = ""
+            for group in textList:
+                if "shadow:x:" in group:
+                    group = "shadow:x:42:"
+                text = "\n"+group
+            #file.write(text)
+    log.done("Removed all users from the shadow group!")
 
 def ssh(log):
     # Check if SSH should be installed
