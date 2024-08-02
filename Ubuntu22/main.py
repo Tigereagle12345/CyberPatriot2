@@ -839,18 +839,21 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     log.done("Default user umask is 027 or more restrictive!")
     log.done("/etc/login.defs is now configured!")
 
-    # # Remove all users from the shadow group
+    # Remove all users from the shadow group
     log.text("Removing users from the shadow group...")
     with open("/etc/group", "r") as source:
-        with open("/etc/group", "w") as file:
-            textList = source.readlines()
-            text = ""
-            for group in textList:
-                if "shadow:x:" in group:
-                    group = "shadow:x:42:"
-                text = "\n"+group
-            #file.write(text)
+        textList = source.readlines()
+        print(textList)
+    with open("/etc/group", "w") as file:
+        text = ""
+        for group in textList:
+            if "shadow:x:" in group:
+                group = "shadow:x:42:"
+            text = "\n"+group
+            print(text)
+        file.write(text)
     log.done("Removed all users from the shadow group!")
+    pause(log)
 
 def ssh(log):
     # Check if SSH should be installed
