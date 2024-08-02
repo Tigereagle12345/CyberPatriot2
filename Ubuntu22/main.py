@@ -654,7 +654,7 @@ def delGroup(log, GROUPS):
 def modGroupMem(log, GROUPS, USERS, NORMUSERS):
     log.warn("Groups: ")
     for group in GROUPS.keys():
-        log.warn(f"{group}: {GROUPS[group]['Users']}")
+        log.warn(f"{group.replace("\n", "")}: {GROUPS[group]['Users']}")
     if answer("Modify members of a group?", log):
         run = True
         while run:
