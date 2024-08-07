@@ -729,7 +729,6 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
     with open("/etc/pam.d/common-account", "w") as file:
         file.write("account required pam_faillock.so")
     log.done("Lockout for failed password attempts enabled!")
-    pause(log)
     
     # Disable password reuse to the last 5 passwords
     log.text("Disabling password reuse...")
@@ -749,14 +748,12 @@ def passwd(log, CURR_DIR, USERS, USERNAMES, MASTER_PASSWORD, NORMUSERS):
         with open(os.path.join(CURR_DIR, "config/common-password"), "r") as source:
             file.write(source.read())
     log.done("Hashing algorithm set to yescrypt")
-    pause(log)
 
     # Configure /etc/login.defs
     log.text("Configuring /etc/login.defs...")
     with open("/etc/login.defs", "w") as file:
         with open(os.path.join(CURR_DIR, "config/login.defs")) as source:
             file.write(source.read())
-    pause(log)
 
     # Update user passwords
     goodUsers = []
