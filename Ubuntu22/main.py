@@ -1475,7 +1475,50 @@ def delServices(CURR_DIR, log):
             log.text("Uninstalling RPC...")
             os.system("apt purge rpcbind -y")
             log.text("RPC uninstalled!")
-
+            
+    # -- Uninstall known malware --
+    # Uninstall John the Ripper
+    if checkPackageInstall(CURR_DIR, "john"):
+        if not answer("Should John the Ripper (Password cracker) be installed?", log):
+            log.text("Uninstalling John...")
+            os.system("apt purge john -y")
+            log.text("John uninstalled!")
+            
+    # Uninstall Hashcat
+    if checkPackageInstall(CURR_DIR, "hashcat"):
+        if not answer("Should Hashcat be installed?", log):
+            log.text("Uninstalling Hashcat...")
+            os.system("apt purge hashcat -y")
+            log.text("Hashcat uninstalled!")
+            
+    # Uninstall Wireshark
+    if checkPackageInstall(CURR_DIR, "wireshark"):
+        if not answer("Should Wireshark be installed?", log):
+            log.text("Uninstalling Wireshark...")
+            os.system("apt purge wireshark -y")
+            log.text("Wireshark uninstalled!")
+            
+    # Uninstall Medusa
+    if checkPackageInstall(CURR_DIR, "medusa"):
+        if not answer("Should Medusa be installed?", log):
+            log.text("Uninstalling Medusa...")
+            os.system("apt purge medusa -y")
+            log.text("Medusa uninstalled!")
+            
+    # Uninstall Netcat
+    if checkPackageInstall(CURR_DIR, "netcat"):
+        if not answer("Should Netcat be installed?", log):
+            log.text("Uninstalling Netcat...")
+            os.system("apt purge netcat -y")
+            log.text("Netcat uninstalled!")
+            
+    # Uninstall Hydra
+    if checkPackageInstall(CURR_DIR, "hydra"):
+        if not answer("Should Hydra be installed?", log):
+            log.text("Uninstalling Hydra...")
+            os.system("apt purge hydra -y")
+            log.text("Hydra uninstalled!")
+            
 # Install and configure chrony
 def chrony(log):
     log.text("Installing chrony...")
