@@ -7,9 +7,3 @@
 - Standardise all comments, UI text, and style
 - Prevent displaying debug text when running commands
 - Fix AuditD function (audit)
-- Fix password settings (passwd)
-- Add the removal of new programs:
-  - Wireshark
-  - Hashcat
-  - Medusa
-  - John the Ripper
